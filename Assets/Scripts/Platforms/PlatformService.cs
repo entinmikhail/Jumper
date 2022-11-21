@@ -7,6 +7,7 @@ namespace Platforms
     {
         bool TryAddPlatformObjectByData(int currentNumber, PlatformData platform);
         bool TryGetPlatformContainer(int currentNumber, out PlatformContainer platform);
+        void ResetPlatformsData();
     }
 
     public class PlatformService : IPlatformService
@@ -17,7 +18,10 @@ namespace Platforms
 
         [Inject] private IPlatformCreator _platformCreator;
 
-        public bool OldTryAdd(int currentNumber, PlatformContainer platform) => _platformContainersByNumber.TryAdd(currentNumber, platform);
+        public void ResetPlatformsData()
+        {
+            _platformContainersByNumber.Clear();
+        }
         
         public bool TryAddPlatformObjectByData(int currentNumber, PlatformData platformData)
         {

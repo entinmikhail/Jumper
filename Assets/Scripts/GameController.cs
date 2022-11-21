@@ -1,6 +1,6 @@
-﻿using System;
-using Character;
+﻿using Character;
 using Platforms;
+using Popups;
 using UnityEngine;
 using Zenject;
 
@@ -9,8 +9,9 @@ namespace DefaultNamespace
     public class GameController : MonoBehaviour
     {
         [Inject] private ICharacterMover _characterMover;
-        [Inject] private IPlatformService _platformService;
-
+        [Inject] private IPopupService _popupService;
+        [Inject] private IGameStateController _gameStateController;
+        
         private void Awake()
         {
             _characterMover.PlatformBroke += OnPlatformBroke;
@@ -18,21 +19,12 @@ namespace DefaultNamespace
 
         private void Start()
         {
-            GeneratePlatforms();
+            _gameStateController.Start();
         }
-
-        private void GeneratePlatforms()
-        {
-            _platformService.TryAddPlatformObjectByData(1, new PlatformData(false, BonusType.Non));
-            _platformService.TryAddPlatformObjectByData(2, new PlatformData(false, BonusType.ExtraMultiplayer));
-            _platformService.TryAddPlatformObjectByData(3, new PlatformData(false, BonusType.ExtraJump));
-            _platformService.TryAddPlatformObjectByData(4, new PlatformData(false, BonusType.Non));
-            _platformService.TryAddPlatformObjectByData(5, new PlatformData(true, BonusType.Non));
-        }
-
+        
         private void OnPlatformBroke()
         {
-            Debug.LogError("Ты лох");
+            _popupService.ShowPopup(PopupType.LosePopup);
         }
     }
 }

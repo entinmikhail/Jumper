@@ -9,12 +9,13 @@ namespace Character
     {
         void MoveToNextPlatform();
         event Action PlatformBroke;
-
+        void ResetCharacterPosition();
     }
 
     public class CharacterMover : MonoBehaviour, ICharacterMover
     {
         [SerializeField] private CharacterController _characterController;
+        [SerializeField] private Transform _characterSpawnRoot;
 
         public event Action PlatformBroke;
         public int CurrentCharacterPlatformNumber => _currentCharacterPlatformNumber;
@@ -22,7 +23,13 @@ namespace Character
         private int _currentCharacterPlatformNumber;
         
         [Inject] private IPlatformService _platformService;
-
+        
+        public void ResetCharacterPosition()
+        {
+            _currentCharacterPlatformNumber = 0;
+            _characterController.gameObject.transform.position = _characterSpawnRoot.position;
+        }
+        
         public void MoveToNextPlatform()
         {
             _currentCharacterPlatformNumber++;
@@ -32,6 +39,8 @@ namespace Character
                 _currentCharacterPlatformNumber--;
                 return;
             }
+            
+            _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
 
             if (nextPlatformContainer.PlatformData.IsBroken)
             {
@@ -50,8 +59,6 @@ namespace Character
                     Debug.LogError("ExtraJump");
                     break;
             }
-
-            _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
         }
     }
 }
