@@ -19,6 +19,7 @@ namespace Platforms
             var posX = currentNumber % 2 == 1 ? platformTransform.position.x : -platformTransform.position.x;
             platformTransform.position = new Vector3(posX, _platformOffset.y * currentNumber);
             platform.SetData(data);
+            platform.gameObject.SetActive(true);
             
             return platform;
         }
