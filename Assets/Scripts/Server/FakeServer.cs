@@ -5,7 +5,7 @@ namespace Server
     public interface IFakeServer
     {
         void InitializeConnection();
-        GetInitialStateResponse GetInitialState();
+        InitialStateResponse GetInitialState();
         JumpResponse FirstJump(FirstJumpRequest firstJumpRequest);
         CashOutResponse CashOut();
         JumpResponse Jump();
@@ -13,7 +13,7 @@ namespace Server
 
     public class FakeServer : MonoBehaviour, IFakeServer
     {
-        private GetInitialStateResponse _gameState = null;
+        private InitialStateResponse _gameState = null;
         private int _altitude = 0;
         private float _coefficient = 0f;
         private bool _isInitialize;
@@ -23,7 +23,7 @@ namespace Server
             _isInitialize = true;
         }
 
-        public GetInitialStateResponse GetInitialState()
+        public InitialStateResponse GetInitialState()
         {
             if (!_isInitialize)
             {
@@ -39,17 +39,17 @@ namespace Server
                 _coefficient = Random.Range(0.1f, 10f);
             }
         
-            _gameState = new GetInitialStateResponse()
+            _gameState = new InitialStateResponse()
             {
                 BetAmount = Random.Range(0.1f, 10f),
                 Currency = "RUB",
                 IsWin = isWin,
                 IsWithBonus = isWin && Random.Range(0, 100) > 50,
-                Steps = new Step()
+                Steps = new []{new Step()
                 {
                     Altitude = _altitude,
                     Coefficient = _coefficient
-                }
+                }}
             };
         
             return _gameState;
@@ -79,11 +79,11 @@ namespace Server
                 IsWin = isWin,
                 IsWithBonus = _gameState.IsWithBonus,
                 Steps = isWin
-                    ? new Step
+                    ? new []{new Step
                     {
                         Altitude = _altitude,
                         Coefficient = _coefficient + 0.2f
-                    }
+                    }}
                     : null
             };
         }
@@ -125,23 +125,23 @@ namespace Server
                 IsWin = isWin,
                 IsWithBonus = _gameState.IsWithBonus,
                 Steps = isWin
-                    ? new Step
+                    ? new []{ new Step
                     {
                         Altitude = _altitude,
                         Coefficient = Random.Range(0.1f, 10f)
-                    }
+                    }} 
                     : null
             };
         }
     }
 
-    public record GetInitialStateResponse
+    public record InitialStateResponse
     {
         public float BetAmount;
         public string Currency;
         public bool IsWin;
         public bool IsWithBonus;
-        public Step Steps;
+        public Step[] Steps;
     }
 
     public record FirstJumpRequest
@@ -157,7 +157,7 @@ namespace Server
         public string Currency;
         public bool IsWin;
         public bool IsWithBonus;
-        public Step Steps;
+        public Step[] Steps;
     }
     public record CashOutResponse
     {

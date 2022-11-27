@@ -4,11 +4,11 @@ using Zenject;
 
 namespace GameModels.StateMachine
 {
-    public interface IGameplayState : IState
+    public interface IPrepareGameState : IState
     {
     }
 
-    public class GameplayState : IGameplayState
+    public class PrepareGameState : IPrepareGameState
     {
         // [Inject] private ICharacterMover _characterMover;
         // [Inject] private IPopupService _popupService;

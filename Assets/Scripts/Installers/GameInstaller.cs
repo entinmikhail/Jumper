@@ -1,8 +1,8 @@
 using Character;
 using GameModels.StateMachine;
+using Gameplay;
 using Platforms;
 using Popups;
-using Server;
 using UnityEngine;
 using Zenject;
 
@@ -20,5 +20,18 @@ public class GameInstaller : MonoInstaller
         
         Container.Bind<IPlatformService>().To<PlatformService>().AsSingle();
         Container.Bind<IGameStateController>().To<GameStateController>().AsSingle();
+        Container.Bind<IGameLoopStateMachine>().To<GameLoopStateMachine>().AsSingle();
+        
+        BindStates();
+    }
+
+    private void BindStates()
+    {
+        Container.Bind<IPrepareGameState>().To<PrepareGameState>().AsSingle();
+        Container.Bind<IStartGameState>().To<StartGameState>().AsSingle();
+        Container.Bind<IContinueGameState>().To<ContinueGameState>().AsSingle();
+        Container.Bind<IWinGameState>().To<WinGameState>().AsSingle();
+        Container.Bind<ILoseGameState>().To<LoseGameState>().AsSingle();
+        Container.Bind<IBonusGameState>().To<BonusGameState>().AsSingle();
     }
 }

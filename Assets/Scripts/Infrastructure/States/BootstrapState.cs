@@ -1,8 +1,8 @@
-﻿using Server;
-using UnityEngine;
+﻿using GameModels.StateMachine;
+using Server;
 using Zenject;
 
-namespace GameModels.StateMachine
+namespace Infrastructure.States
 {
     public interface IBootstrapState : IState
     {
@@ -11,7 +11,8 @@ namespace GameModels.StateMachine
     public class BootstrapState : IBootstrapState
     {
         private const string Initial = "Initial";
-        
+        private const string Payload = "Main";
+
         [Inject] private IFakeServer _fakeServer;
         [Inject] private ISceneLoader _sceneLoader;
         [Inject] private IGameStateMachine _gameStateMachine;
@@ -19,12 +20,12 @@ namespace GameModels.StateMachine
         public void Enter()
         {
             _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel);
-            _fakeServer.InitializeConnection();
         }
 
         private void EnterLoadLevel()
         {
-            _gameStateMachine.Enter<LoadLevelState>();
+            _fakeServer.InitializeConnection();
+            _gameStateMachine.Enter<LoadLevelState, string>(Payload);
         }
 
         public void Exit()

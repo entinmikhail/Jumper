@@ -1,4 +1,5 @@
 ﻿using GameModels.StateMachine;
+using Infrastructure.States;
 using Zenject;
 
 public interface IGame
