@@ -43,6 +43,7 @@ namespace GameModels
         public float WinAmount { get; set; }
         
         [Inject] private IFakeServer _fakeServer;
+        [Inject] private IAccountModel _accountModel;
         
         public void Initialize(InitialStateResponse initialStateResponse)
         {
@@ -53,6 +54,12 @@ namespace GameModels
             }
 
             ContinueGame(initialStateResponse);
+            _fakeServer.BalanceChanged += OnBalanceChanged;
+        }
+
+        private void OnBalanceChanged(float newBalance)
+        {
+            _accountModel.CurrentBalance = newBalance;
         }
 
         public void Jump()

@@ -1,6 +1,5 @@
 ﻿using Character;
 using Platforms;
-using UnityEngine;
 using Zenject;
 
 namespace GameModels.StateMachine
@@ -11,7 +10,7 @@ namespace GameModels.StateMachine
 
     public class PrepareGameState : IPrepareGameState
     {
-        private const int DefaultPlatformCount = 6;
+        private const int DefaultPlatformCount = 2;
         
         [Inject] private IPlatformService _platformService;
         [Inject] private ICharacterMover _characterMover;
@@ -24,7 +23,7 @@ namespace GameModels.StateMachine
 
         private void GeneratePlatforms()
         {
-            for (int i = 1; i < DefaultPlatformCount; i++)
+            for (int i = 1; i <= DefaultPlatformCount; i++)
                 _platformService.TryAddPlatformObjectByData(i);
         }
 

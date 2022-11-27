@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Server
 {
     public interface IFakeServer
     {
+        event Action<float> BalanceChanged;
         void InitializeConnection();
         InitialStateResponse GetInitialState();
         JumpResponse FirstJump(FirstJumpRequest firstJumpRequest);
@@ -16,13 +19,15 @@ namespace Server
         private InitialStateResponse _gameState = null;
         private int _altitude = 0;
         private float _coefficient = 0f;
+        private float _totalCash = 1000f;
         private bool _isInitialize;
 
+        public event Action<float> BalanceChanged;
         public void InitializeConnection()
         {
             _isInitialize = true;
         }
-
+        
         public InitialStateResponse GetInitialState()
         {
             if (!_isInitialize)
@@ -75,6 +80,7 @@ namespace Server
 
             if (isWin)
                 _altitude = 1;
+            
             _coefficient += 0.2f;
             return new JumpResponse()
             {
@@ -101,7 +107,9 @@ namespace Server
             }
 
             _altitude = 0;
+            _totalCash += _coefficient * _gameState.BetAmount;
             _coefficient = 0;
+            BalanceChanged?.Invoke(_totalCash);
             return new CashOutResponse()
             {
                 Currency = _gameState.Currency,
@@ -127,6 +135,8 @@ namespace Server
             else
             {
                 _coefficient = 0;
+                _totalCash -= _gameState.BetAmount;
+                BalanceChanged?.Invoke(_totalCash);
             }
 
             _coefficient += Random.Range(0.1f, 0.3f);
