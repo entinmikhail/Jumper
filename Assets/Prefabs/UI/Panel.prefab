@@ -171,6 +171,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 973730634638806509, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: m_text
+      value: $6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _value
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
 --- !u!224 &1333644858466535225 stripped
@@ -272,6 +284,18 @@ PrefabInstance:
     - target: {fileID: 973730634266206241, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
       propertyPath: m_Name
       value: Button (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 973730634638806509, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: m_text
+      value: $2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _value
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
@@ -481,6 +505,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 973730634638806509, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: m_text
+      value: $1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _value
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
 --- !u!224 &2615662474813427666 stripped
@@ -583,6 +619,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 973730634638806509, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: m_text
+      value: $10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _value
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
 --- !u!224 &6826946900268041749 stripped
@@ -684,6 +732,14 @@ PrefabInstance:
     - target: {fileID: 973730634266206241, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
       propertyPath: m_Name
       value: Button (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 973730634638806509, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: m_text
+      value: Max
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282738902613365666, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}
+      propertyPath: _type
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1082bad14b81c8d4eae7ce1d41e104bb, type: 3}

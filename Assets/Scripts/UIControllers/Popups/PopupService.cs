@@ -17,17 +17,17 @@ namespace Popups
 
     public class PopupService : MonoBehaviour, IPopupService
     {
-        [SerializeField] private WinPopup _winPopup;
+        [SerializeField] private WinPopup _winPopupBase;
         [SerializeField] private LosePopup _losePopup;
 
-        private Dictionary<PopupType, GameObject> _popupsByType = new();
+        private Dictionary<PopupType, PopupBase> _popupsByType = new();
 
         private void Awake()
         {
-            _popupsByType = new Dictionary<PopupType, GameObject>()
+            _popupsByType = new Dictionary<PopupType, PopupBase>()
             {
-                { PopupType.LosePopup, _losePopup.gameObject },
-                { PopupType.WinPopup, _winPopup.gameObject },
+                { PopupType.LosePopup, _losePopup },
+                { PopupType.WinPopup, _winPopupBase },
             };
         }
 
@@ -38,7 +38,7 @@ namespace Popups
                 return;
             }
             
-            popup.SetActive(true);
+            popup.Open();
         }
     }
 }

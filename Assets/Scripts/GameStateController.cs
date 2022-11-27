@@ -1,37 +1,42 @@
-﻿using Character;
-using Platforms;
-using UnityEngine;
+﻿using System;
+using GameModels;
+using GameModels.StateMachine;
+using Gameplay;
 using Zenject;
 
 public interface IGameStateController
 {
-    void Start();
-    void Restart();
+    void Initialize(GameState gameState);
 }
 
 public class GameStateController : IGameStateController
 {
-    [Inject] private ICharacterMover _characterMover;
-    [Inject] private IPlatformService _platformService;
+    [Inject] private IGameLoopStateMachine _gameLoopStateMachine;
+    [Inject] private IGameModel _gameModel;
+    
+    public void Initialize(GameState gameState)
+    {
+        _gameModel.GameStateChanged += OnGameStateChanged;
+        OnGameStateChanged(gameState);
+    }
 
-    public void Start()
+    private void OnGameStateChanged(GameState gameState)
     {
-        GeneratePlatforms();
+        switch (gameState)
+        {
+            case GameState.PrepareGameState: OnPrepare(); break;
+            case GameState.ContinueGameAfterLogin: OnContinue(); break;
+            case GameState.StartGameplay: OnStart(); break;
+            case GameState.Lose: OnLose(); break;
+            case GameState.Win: OnWin(); break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(gameState), gameState, null);
+        }
     }
-        
-    public void Restart()
-    {
-        _characterMover.ResetCharacterPosition();
-        _platformService.ResetPlatformsData();
-        GeneratePlatforms();
-    }
-        
-    public void GeneratePlatforms()
-    {
-        _platformService.TryAddPlatformObjectByData(1, new PlatformData(false, BonusType.Non));
-        _platformService.TryAddPlatformObjectByData(2, new PlatformData(false, BonusType.ExtraMultiplayer));
-        _platformService.TryAddPlatformObjectByData(3, new PlatformData(false, BonusType.Non));
-        _platformService.TryAddPlatformObjectByData(4, new PlatformData(false, BonusType.ExtraJump));
-        _platformService.TryAddPlatformObjectByData(5, new PlatformData(true, BonusType.Non));
-    }
+
+    private void OnPrepare() => _gameLoopStateMachine.Enter<PrepareGameState>();
+    private void OnStart() => _gameLoopStateMachine.Enter<StartGameState>();
+    private void OnLose() => _gameLoopStateMachine.Enter<LoseGameState>();
+    private void OnWin() => _gameLoopStateMachine.Enter<WinGameState>();
+    private void OnContinue() => _gameLoopStateMachine.Enter<ContinueGameState>();
 }

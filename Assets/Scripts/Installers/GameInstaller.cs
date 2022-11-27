@@ -1,4 +1,5 @@
 using Character;
+using GameModels;
 using GameModels.StateMachine;
 using Gameplay;
 using Platforms;
@@ -21,6 +22,7 @@ public class GameInstaller : MonoInstaller
         Container.Bind<IPlatformService>().To<PlatformService>().AsSingle();
         Container.Bind<IGameStateController>().To<GameStateController>().AsSingle();
         Container.Bind<IGameLoopStateMachine>().To<GameLoopStateMachine>().AsSingle();
+        Container.Bind<IAccountModel>().To<AccountModel>().AsSingle();
         
         BindStates();
     }

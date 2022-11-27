@@ -1,4 +1,7 @@
 ﻿using GameModels.StateMachine;
+using Platforms;
+using Popups;
+using Zenject;
 
 namespace Gameplay
 {
@@ -8,14 +11,17 @@ namespace Gameplay
 
     public class LoseGameState : ILoseGameState
     {
-        public void Exit()
-        {
-            throw new System.NotImplementedException();
-        }
+        [Inject] private IPopupService _popupService;
+        [Inject] private IPlatformService _platformService;
 
         public void Enter()
         {
-            throw new System.NotImplementedException();
+            _popupService.ShowPopup(PopupType.LosePopup);
+        }
+
+        public void Exit()
+        {
+            _platformService.ResetPlatformsData();
         }
     }
 }

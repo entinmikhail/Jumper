@@ -1,5 +1,6 @@
 ﻿using Character;
-using Popups;
+using Platforms;
+using UnityEngine;
 using Zenject;
 
 namespace GameModels.StateMachine
@@ -10,30 +11,22 @@ namespace GameModels.StateMachine
 
     public class PrepareGameState : IPrepareGameState
     {
-        // [Inject] private ICharacterMover _characterMover;
-        // [Inject] private IPopupService _popupService;
-        // [Inject] private IGameStateController _gameStateController;
-        //
-        // public void Enter()
-        // {
-        //     _characterMover.PlatformBroke += OnPlatformBroke;
-        //     _gameStateController.Start();
-        // }
-        //
-        // public void Exit()
-        // {
-        //     _characterMover.PlatformBroke -= OnPlatformBroke;
-        // }
-        //
-        // private void OnPlatformBroke()
-        // {
-        //     _popupService.ShowPopup(PopupType.LosePopup);
-        // }
+        private const int DefaultPlatformCount = 6;
+        
+        [Inject] private IPlatformService _platformService;
+        [Inject] private ICharacterMover _characterMover;
 
         public void Enter()
         {
+            GeneratePlatforms();
+            _characterMover.ResetCharacterPosition();
         }
-        
+
+        private void GeneratePlatforms()
+        {
+            for (int i = 1; i < DefaultPlatformCount; i++)
+                _platformService.TryAddPlatformObjectByData(i);
+        }
 
         public void Exit()
         {

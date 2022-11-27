@@ -33,10 +33,11 @@ namespace Server
             
             _altitude = 0;
             var isWin = Random.Range(0, 100) > 75;
+             isWin = true;
             if (isWin)
             {
                 _altitude = Random.Range(1, 20);
-                _coefficient = Random.Range(0.1f, 10f);
+                _coefficient = 0;
             }
         
             _gameState = new InitialStateResponse()
@@ -52,7 +53,8 @@ namespace Server
                 }}
             };
         
-            return _gameState;
+            // return _gameState;
+            return null;
         }
 
         public JumpResponse FirstJump(FirstJumpRequest firstJumpRequest)
@@ -69,9 +71,11 @@ namespace Server
             _gameState.IsWithBonus = firstJumpRequest.IsWithBonus;
         
             var isWin = Random.Range(0, 100) < 80;
-            if (isWin)
-                _altitude++;
+            isWin = true;
 
+            if (isWin)
+                _altitude = 1;
+            _coefficient += 0.2f;
             return new JumpResponse()
             {
                 Currency = _gameState.Currency,
@@ -82,7 +86,7 @@ namespace Server
                     ? new []{new Step
                     {
                         Altitude = _altitude,
-                        Coefficient = _coefficient + 0.2f
+                        Coefficient = _coefficient
                     }}
                     : null
             };
@@ -115,9 +119,13 @@ namespace Server
             }
             
             var isWin = Random.Range(0, 100) < 80;
+            isWin = true;
+
             if (isWin)
                 _altitude++;
-        
+
+            Debug.LogError(_coefficient);
+            _coefficient += Random.Range(0.1f, 0.3f);
             return new JumpResponse()
             {
                 Currency = _gameState.Currency,
@@ -128,7 +136,7 @@ namespace Server
                     ? new []{ new Step
                     {
                         Altitude = _altitude,
-                        Coefficient = Random.Range(0.1f, 10f)
+                        Coefficient = _coefficient
                     }} 
                     : null
             };

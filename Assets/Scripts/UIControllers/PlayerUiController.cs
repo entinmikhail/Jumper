@@ -1,5 +1,4 @@
-﻿using Character;
-using Popups;
+﻿using GameModels;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -10,10 +9,12 @@ namespace UIControllers
     {
         [SerializeField] private Button _jumpButton;
         [SerializeField] private Button _cashOutButton;
+        [SerializeField] private Button _bonusBuyButton;
+        [SerializeField] private UIBetPanel _uiBetPanel;
 
-        [Inject] private ICharacterMover _characterMover;
-        [Inject] private IPopupService _popupService;
+        [Inject] private IGameModel _gameModel;
 
+        
         private void Awake()
         {
             _jumpButton.onClick.AddListener(OnJump);
@@ -22,12 +23,25 @@ namespace UIControllers
 
         private void OnCashOut()
         {
-            _popupService.ShowPopup(PopupType.WinPopup);
+            _gameModel.CashOut();
         }
 
         private void OnJump()
         {
-            _characterMover.MoveToNextPlatform();
+            if (_uiBetPanel.CurrentBet <= 0)
+            {
+                Debug.LogError("Сделайте ставку");
+                return;
+            }
+            _gameModel.BetAmount = _uiBetPanel.CurrentBet;
+            _gameModel.Jump();
         }
+    }
+
+    public enum ButtonType
+    {
+        Min,
+        Max,
+        Value
     }
 }

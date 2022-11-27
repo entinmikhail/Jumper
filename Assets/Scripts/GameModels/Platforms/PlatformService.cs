@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using Zenject;
 
 namespace Platforms
 {
     public interface IPlatformService
     {
-        bool TryAddPlatformObjectByData(int currentNumber, PlatformData platform);
+        bool TryAddPlatformObjectByData(int currentNumber);
         bool TryGetPlatformContainer(int currentNumber, out PlatformContainer platform);
         void ResetPlatformsData();
+        bool TryGenerateNextPlatform();
     }
 
     public class PlatformService : IPlatformService
@@ -20,12 +22,22 @@ namespace Platforms
 
         public void ResetPlatformsData()
         {
+            foreach (var platform in _platformContainersByNumber.Values)
+                Object.Destroy(platform.gameObject);
+            
             _platformContainersByNumber.Clear();
         }
-        
-        public bool TryAddPlatformObjectByData(int currentNumber, PlatformData platformData)
+
+        public bool TryGenerateNextPlatform()
         {
-            return _platformContainersByNumber.TryAdd(currentNumber, _platformCreator.CreatePlatform(currentNumber, platformData));
+            _currentNumber++;
+            return _platformContainersByNumber.TryAdd(_currentNumber, _platformCreator.CreatePlatform(_currentNumber));
+        }
+        
+        public bool TryAddPlatformObjectByData(int currentNumber)
+        {
+            _currentNumber = currentNumber;
+            return _platformContainersByNumber.TryAdd(currentNumber, _platformCreator.CreatePlatform(currentNumber));
         }
 
         public bool TryGetPlatformContainer(int currentNumber, out PlatformContainer platform) => _platformContainersByNumber.TryGetValue(currentNumber, out platform);

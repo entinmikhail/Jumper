@@ -10,9 +10,7 @@ namespace GameModels.StateMachine
         private const string Main = "Main";
         
         [Inject] private ISceneLoader _sceneLoader;
-        [Inject] private IFakeServer _fakeServer;
         [Inject] private IGameStateMachine _gameStateMachine;
-        [Inject] private IGameModel _gameModel;
         
         public void Enter(string name)
         {
@@ -21,8 +19,6 @@ namespace GameModels.StateMachine
 
         private void OnLoaded()
         {
-            var result = _fakeServer.GetInitialState();
-            _gameModel.Initialize(result);
             _gameStateMachine.Enter<GameLoopState>();
         }
 
