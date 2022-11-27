@@ -5,6 +5,7 @@ public interface ICoroutineRunner
 {
     Coroutine StartCoroutine(IEnumerator coroutine);
 }
+
 public class CoroutineRunner : MonoBehaviour, ICoroutineRunner
 {
     private void Awake() => DontDestroyOnLoad(this);
