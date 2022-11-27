@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace DefaultNamespace
+namespace UIControllers
 {
     public class PlayerUiController : MonoBehaviour
     {
