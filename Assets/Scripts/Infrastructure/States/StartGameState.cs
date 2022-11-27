@@ -1,15 +1,17 @@
 ﻿namespace GameModels.StateMachine
 {
-    public class StartGameState : IState
+    public interface IStartGameState : IState
+    {
+    }
+
+    public class StartGameState : IStartGameState
     {
         public void Enter()
         {
-            throw new System.NotImplementedException();
         }
 
         public void Exit()
         {
-            throw new System.NotImplementedException();
         }
     }
 }

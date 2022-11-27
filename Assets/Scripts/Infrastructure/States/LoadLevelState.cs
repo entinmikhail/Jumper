@@ -1,21 +1,24 @@
-﻿using System;
-using Zenject;
+﻿using Zenject;
 
 namespace GameModels.StateMachine
 {
-    public class LoadLevelState : IState
+    public interface ILoadLevelState : IState
+    {
+    }
+
+    public class LoadLevelState : ILoadLevelState
     {
         private const string Main = "Main";
         
         [Inject] private ISceneLoader _sceneLoader;
-        public void Enter()
+        
+        public void Enter(string name)
         {
             _sceneLoader.Load(Main);
         }
 
         public void Exit()
         {
-            throw new NotImplementedException();
         }
     }
 }

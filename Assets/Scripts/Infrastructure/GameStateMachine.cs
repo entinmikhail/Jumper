@@ -1,35 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Zenject;
 
 namespace GameModels.StateMachine
 {
     public interface IGameStateMachine
     {
-        void Enter<TState>() where TState : IState;
+        void Enter<TState>() where TState : class, IState;
+        void Initialize();
     }
 
     public class GameStateMachine : IGameStateMachine
     {
-        private readonly Dictionary<Type, IState> _states;
-        private IState _activeState;
-
-        public GameStateMachine()
+        private Dictionary<Type, IExitableState> _states;
+        private IExitableState _activeState;
+        
+        [Inject] private IBootstrapState _bootstrapState;
+        [Inject] private ILoadLevelState _loadLevelState;
+        
+        [Inject] private IGameplayState _gameplayState;
+        [Inject] private IStartGameState _startGameState;
+        [Inject] private IContinueGameState _continueGameState;
+        
+        public void Initialize()
         {
-            _states = new Dictionary<Type, IState>
+            _states = new Dictionary<Type, IExitableState>
             {
-                { typeof(BootstrapState), new BootstrapState() },
-                { typeof(GameplayState), new GameplayState() },
-                { typeof(ContinueGameState), new ContinueGameState() },
-                { typeof(LoadLevelState), new LoadLevelState() },
-                { typeof(StartGameState), new StartGameState() },
+                { typeof(BootstrapState), _bootstrapState },
+                { typeof(LoadLevelState), _loadLevelState  },
+                
+                
+                { typeof(GameplayState), _gameplayState },
+                { typeof(ContinueGameState), _continueGameState },
+                { typeof(StartGameState), _startGameState },
             };
         }
 
-        public void Enter<TState>() where TState : IState
+        public void Enter<TState>() where TState : class, IState
+        {
+            var state = ChangeState<TState>();
+            state.Enter();
+        }
+
+        public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload>
+        {
+            var state = ChangeState<TState>();
+            state.Enter(payload);
+        }
+
+        private TState ChangeState<TState>() where TState : class, IExitableState
         {
             _activeState?.Exit();
-            _activeState = _states[typeof(TState)];
-            _activeState.Enter();
+            
+            TState state = GetState<TState>();
+            _activeState = state;
+            
+            return state;
         }
+
+        private TState GetState<TState>() where TState : class, IExitableState => _states[typeof(TState)] as TState;
     }
 }

@@ -1,9 +1,14 @@
 ﻿using Server;
+using UnityEngine;
 using Zenject;
 
 namespace GameModels.StateMachine
 {
-    public class BootstrapState : IState
+    public interface IBootstrapState : IState
+    {
+    }
+
+    public class BootstrapState : IBootstrapState
     {
         private const string Initial = "Initial";
         

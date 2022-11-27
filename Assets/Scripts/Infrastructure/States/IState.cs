@@ -1,8 +1,17 @@
 ﻿namespace GameModels.StateMachine
 {
-    public interface IState
+    public interface IState : IExitableState
     {
-        void Enter();
-        void Exit();
+        public void Enter();
+    }
+
+    public interface IPayloadedState<TPayload> : IExitableState
+    {
+        public void Enter(TPayload payload);
+    }
+
+    public interface IExitableState
+    {
+        public void Exit();
     }
 }

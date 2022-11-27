@@ -12,6 +12,7 @@ public class Game : IGame
     
     public void Start()
     {
+        _gameStateMachine.Initialize();
         _gameStateMachine.Enter<BootstrapState>();
     }
 }
