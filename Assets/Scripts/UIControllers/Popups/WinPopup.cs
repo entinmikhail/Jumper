@@ -1,4 +1,5 @@
-﻿using GameModels;
+﻿using System;
+using GameModels;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +21,7 @@ namespace Popups
 
         protected override void OnOpen()
         {
-            _textMeshPro.text = $"{_gameModel.BetAmount * _gameModel.CurrentCoefficient}";
+            _textMeshPro.text = $"$ {Math.Round(_gameModel.BetAmount * _gameModel.CurrentCoefficient, 2)}";
         } 
 
         private void OnButton()

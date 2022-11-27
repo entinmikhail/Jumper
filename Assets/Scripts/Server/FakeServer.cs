@@ -99,8 +99,9 @@ namespace Server
                 Debug.LogError("Not initialize");
                 return null;
             }
-            
+
             _altitude = 0;
+            _coefficient = 0;
             return new CashOutResponse()
             {
                 Currency = _gameState.Currency,
@@ -119,12 +120,15 @@ namespace Server
             }
             
             var isWin = Random.Range(0, 100) < 80;
-            isWin = true;
+            // isWin = true;
 
             if (isWin)
                 _altitude++;
+            else
+            {
+                _coefficient = 0;
+            }
 
-            Debug.LogError(_coefficient);
             _coefficient += Random.Range(0.1f, 0.3f);
             return new JumpResponse()
             {

@@ -138,6 +138,8 @@ namespace GameModels
         
         private void OnLose()
         {
+            CurrentAltitude = 0;
+            CurrentCoefficient = 0;
             Lose?.Invoke();
             SetGameState(GameState.Lose);
         }

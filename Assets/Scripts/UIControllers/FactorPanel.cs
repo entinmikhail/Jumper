@@ -16,6 +16,12 @@ namespace UIControllers
         {
             _textMeshPro.text = $"X {Math.Round(_gameModel.CurrentCoefficient, 2)}";
             _gameModel.Jumped += OnJump;
+            _gameModel.GameStateChanged += OnJump;
+        }
+
+        private void OnJump(GameState obj)
+        {
+            _textMeshPro.text = $"X {Math.Round(_gameModel.CurrentCoefficient, 2)}";
         }
 
         private void OnJump(int obj)
