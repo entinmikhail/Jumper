@@ -1,5 +1,7 @@
-﻿using TMPro;
+﻿using GameModels;
+using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace UIControllers
 {
@@ -8,7 +10,9 @@ namespace UIControllers
         [SerializeField] private UIBetButton[] _buttons;
         [SerializeField] private TextMeshProUGUI _textMesh;
         
-        public float CurrentBet {get; private set;}
+        public float CurrentBet {get; set;}
+
+        [Inject] private IGameModel _gameModel;
 
         private void Awake()
         {
@@ -18,6 +22,12 @@ namespace UIControllers
 
         private void ChangeCurrentBetByButton(UIBetButton uiBetButton)
         {
+            if (_gameModel.GameState != GameState.PrepareGameState)
+            {
+                Debug.LogError("GameState != GameState.PrepareGameState");
+                return;
+            }
+            
             if (uiBetButton.Type is ButtonType.Max or ButtonType.Min)
                 CurrentBet = uiBetButton.Value;
             else

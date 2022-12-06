@@ -4,6 +4,7 @@ using GameModels.StateMachine;
 using Gameplay;
 using Platforms;
 using Popups;
+using Services;
 using UnityEngine;
 using Zenject;
 
@@ -22,6 +23,7 @@ public class GameInstaller : MonoInstaller
         Container.Bind<IPlatformService>().To<PlatformService>().AsSingle();
         Container.Bind<IGameStateController>().To<GameStateController>().AsSingle();
         Container.Bind<IGameLoopStateMachine>().To<GameLoopStateMachine>().AsSingle();
+        Container.Bind<IUiLocker>().To<UiLocker>().AsSingle();
         
         BindStates();
     }

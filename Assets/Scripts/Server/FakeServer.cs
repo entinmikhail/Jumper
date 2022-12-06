@@ -39,15 +39,16 @@ namespace Server
             _altitude = 0;
             var isWin = Random.Range(0, 100) > 75;
              isWin = true;
+             
             if (isWin)
             {
                 _altitude = Random.Range(1, 20);
-                _coefficient = 0;
+                _coefficient = Random.Range(1, 20);
             }
         
             _gameState = new InitialStateResponse()
             {
-                BetAmount = Random.Range(0.1f, 10f),
+                BetAmount = Random.Range(1f, 14),
                 Currency = "RUB",
                 IsWin = isWin,
                 IsWithBonus = isWin && Random.Range(0, 100) > 50,
@@ -64,7 +65,6 @@ namespace Server
 
         public JumpResponse FirstJump(FirstJumpRequest firstJumpRequest)
         {
-            
             if (!_isInitialize)
             {
                 Debug.LogError("Not initialize");
@@ -140,6 +140,48 @@ namespace Server
             }
 
             _coefficient += Random.Range(0.1f, 0.3f);
+
+            if (isWin && Random.Range(0, 100) < 20)
+            {
+                _altitude++;
+                var bonusFactor = Random.Range(0.1f, 0.3f);
+                _coefficient += bonusFactor;
+                return new JumpResponse()
+                {
+                    Currency = _gameState.Currency,
+                    BetAmount = _gameState.BetAmount,
+                    IsWin = isWin,
+                    IsWithBonus = _gameState.IsWithBonus,
+                    
+                    Steps = new []
+                    { 
+                            new Step { Altitude = _altitude - 1, Coefficient = _coefficient - bonusFactor, Box = "PLUS1" },
+                            new Step { Altitude = _altitude, Coefficient = _coefficient }
+                    }
+                };
+            }
+
+            if (isWin && Random.Range(0, 100) < 20)
+            {
+                _coefficient *= 2;
+                
+                return new JumpResponse()
+                {
+                    Currency = _gameState.Currency,
+                    BetAmount = _gameState.BetAmount,
+                    IsWin = isWin,
+                    IsWithBonus = _gameState.IsWithBonus,
+                    Steps = isWin
+                        ? new []{ new Step
+                        {
+                            Altitude = _altitude,
+                            Coefficient = _coefficient,
+                            Box = "X2" 
+                        }} 
+                        : null
+                };
+            }
+            
             return new JumpResponse()
             {
                 Currency = _gameState.Currency,

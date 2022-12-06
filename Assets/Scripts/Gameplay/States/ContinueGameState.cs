@@ -18,10 +18,11 @@ namespace GameModels.StateMachine
         {
             _gameModel.Jumped += OnJumped;
             
-            for (int i = _gameModel.CurrentAltitude - 2; i < _gameModel.CurrentAltitude + 2; i++)
+            for (int i = 1; i < _gameModel.CurrentAltitude + 3; i++)
                 _platformService.TryAddPlatformObjectByData(i);
             
             _characterMover.SetNumberPlatform(_gameModel.CurrentAltitude);
+            _characterMover.RefreshCharacter();
         }
 
         private void OnJumped(int index)

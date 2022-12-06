@@ -16,7 +16,7 @@ namespace GameModels.StateMachine
         public void Enter<TState>() where TState : class, IState
         {
             var state = ChangeState<TState>();
-            Debug.LogError(typeof(TState).Name);
+            Debug.Log(typeof(TState).Name);
             state.Enter();
         }
 

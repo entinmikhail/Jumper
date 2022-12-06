@@ -30,12 +30,18 @@ namespace Platforms
 
         public bool TryGenerateNextPlatform()
         {
+            if (_platformContainersByNumber.ContainsKey(_currentNumber + 1))
+                return false;
+            
             _currentNumber++;
             return _platformContainersByNumber.TryAdd(_currentNumber, _platformCreator.CreatePlatform(_currentNumber));
         }
         
         public bool TryAddPlatformObjectByData(int currentNumber)
         {
+            if (_platformContainersByNumber.ContainsKey(currentNumber))
+                return false;
+                    
             _currentNumber = currentNumber;
             return _platformContainersByNumber.TryAdd(currentNumber, _platformCreator.CreatePlatform(currentNumber));
         }

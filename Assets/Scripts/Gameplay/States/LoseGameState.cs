@@ -1,4 +1,5 @@
-﻿using GameModels.StateMachine;
+﻿using Character;
+using GameModels.StateMachine;
 using Platforms;
 using Popups;
 using Zenject;
@@ -13,10 +14,11 @@ namespace Gameplay
     {
         [Inject] private IPopupService _popupService;
         [Inject] private IPlatformService _platformService;
+        [Inject] private ICharacterMover _characterMover;
 
-        public void Enter()
+        public async void Enter()
         {
-            _popupService.ShowPopup(PopupType.LosePopup);
+            await _characterMover.MoveToNextPlatform();
         }
 
         public void Exit()

@@ -18,7 +18,7 @@ namespace GameModels.StateMachine
         public void Enter()
         {
             GeneratePlatforms();
-            _characterMover.ResetCharacterPosition();
+            _characterMover.RefreshCharacter();
         }
 
         private void GeneratePlatforms()

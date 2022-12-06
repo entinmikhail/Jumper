@@ -8,8 +8,6 @@ namespace GameModels
     {
         event Action<GameState> GameStateChanged;
         event Action<int> Jumped;
-        event Action Lose;
-        event Action<float> Win;
         float BetAmount { get; set; }
         string Currency { get; set; }
         bool IsWin { get; set; }
@@ -29,9 +27,6 @@ namespace GameModels
     {
         public event Action<GameState> GameStateChanged;
         public event Action<int> Jumped;
-        public event Action Lose;
-        public event Action<float> Win;
-        
         public GameState GameState { get; set; }
         public float BetAmount { get; set; }
         public string Currency { get; set; }
@@ -101,10 +96,7 @@ namespace GameModels
             BetAmount = jumpResponse.BetAmount;
             Currency = jumpResponse.Currency;
             IsWithBonus = jumpResponse.IsWithBonus;
-            
-            if (IsWithBonus)
-                SetGameState(GameState.Bonus);
-            
+
             foreach (var step in jumpResponse.Steps)
                 JumpToPlatform(step);
         }
@@ -116,11 +108,15 @@ namespace GameModels
             IsWin = initialStateResponse.IsWin;
             IsWithBonus = initialStateResponse.IsWithBonus;
             
-            if (IsWithBonus)
-                SetGameState(GameState.Bonus);
-
             foreach (var step in initialStateResponse.Steps)
-                JumpToPlatform(step);
+            {
+                CurrentCoefficient = step.Coefficient;
+                CurrentAltitude = step.Altitude;
+                LastStep = step;
+            }
+            
+            // if (IsWithBonus)
+            //     SetGameState(GameState.Bonus);
         }
 
         private void JumpToPlatform(Step step)
@@ -138,23 +134,23 @@ namespace GameModels
             Currency = cashOutResponse.Currency;
             IsWin = cashOutResponse.IsWin;
             WinAmount = cashOutResponse.WinAmount;
-            Win?.Invoke(WinAmount);
+            
             SetGameState(GameState.Win);
-
         }
         
         private void OnLose()
         {
             CurrentAltitude = 0;
             CurrentCoefficient = 0;
-            Lose?.Invoke();
+            
             SetGameState(GameState.Lose);
         }
 
         private void ContinueGame(InitialStateResponse initialStateResponse)
         {
-            SetGameState(GameState.ContinueGameAfterLogin);
             RefreshData(initialStateResponse);
+            
+            SetGameState(GameState.ContinueGameAfterLogin);
         }
 
         public void SetGameState(GameState newGameState)
