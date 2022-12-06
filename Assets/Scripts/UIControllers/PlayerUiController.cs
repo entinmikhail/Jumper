@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using GameModels;
+﻿using GameModels;
 using Services;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +15,7 @@ namespace UIControllers
 
         [Inject] private IGameModel _gameModel;
         [Inject] private IUiLocker _uiLocker;
+        [Inject] private ICoroutineRunner _coroutineRunner;
 
         private void Awake()
         {
@@ -34,7 +34,7 @@ namespace UIControllers
             _gameModel.CashOut();
         }
 
-        private async void OnJump()
+        private void OnJump()
         {
             if (_uiBetPanel.CurrentBet <= 0)
             {
@@ -46,8 +46,11 @@ namespace UIControllers
             _gameModel.Jump();
             
             _jumpButton.interactable = false;
-            await Task.Delay(2000);
-            _jumpButton.interactable = true;
+
+            _coroutineRunner.StartAfterDelay(2f, () =>
+            {
+                _jumpButton.interactable = true;
+            });
         }
     }
 

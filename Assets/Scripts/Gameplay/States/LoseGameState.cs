@@ -1,7 +1,6 @@
 ﻿using Character;
 using GameModels.StateMachine;
 using Platforms;
-using Popups;
 using Zenject;
 
 namespace Gameplay
@@ -12,13 +11,12 @@ namespace Gameplay
 
     public class LoseGameState : ILoseGameState
     {
-        [Inject] private IPopupService _popupService;
         [Inject] private IPlatformService _platformService;
         [Inject] private ICharacterMover _characterMover;
 
-        public async void Enter()
+        public void Enter()
         {
-            await _characterMover.MoveToNextPlatform();
+            _characterMover.MoveToNextPlatform();
         }
 
         public void Exit()

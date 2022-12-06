@@ -38,7 +38,7 @@ namespace Server
             
             _altitude = 0;
             var isWin = Random.Range(0, 100) > 75;
-             isWin = true;
+            isWin = true;
              
             if (isWin)
             {
@@ -58,8 +58,8 @@ namespace Server
                     Coefficient = _coefficient
                 }}
             };
-        
-            // return _gameState;
+            return Random.Range(0, 100) > 75 ? _gameState : null;
+            return _gameState;
             return null;
         }
 
@@ -82,6 +82,7 @@ namespace Server
                 _altitude = 1;
             
             _coefficient += 0.2f;
+            
             return new JumpResponse()
             {
                 Currency = _gameState.Currency,

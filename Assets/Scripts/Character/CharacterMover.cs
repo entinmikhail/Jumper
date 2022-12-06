@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using GameModels;
 using Platforms;
 using Popups;
-using Services;
 using UnityEngine;
 using Zenject;
 
@@ -11,9 +9,10 @@ namespace Character
 {
     public interface ICharacterMover
     {
-        Task MoveToNextPlatform();
+        void MoveToNextPlatform();
         void ResetCharacterPosition();
-        Task SetNumberPlatform(int numberPlatform);
+        void SetNumberPlatform(int numberPlatform);
+        void SetNumberPlatformSync(int numberPlatform);
         void RefreshCharacter();
         void SetIdle();
         event Action PlatformBroke;
@@ -35,6 +34,7 @@ namespace Character
         [Inject] private IPlatformService _platformService;
         [Inject] private IGameModel _gameModel;
         [Inject] private IPopupService _popupService;
+        [Inject] private ICoroutineRunner _coroutineRunner;
         
         private void Awake()
         {
@@ -42,7 +42,6 @@ namespace Character
             MoveEnd += OnMoveEnd;
         }
         
-
         private void Update()
         {
             if (!_inMove)
@@ -56,6 +55,7 @@ namespace Character
                 return;
                 
             _inMove = false;
+            
             MoveEnd?.Invoke();
         }
 
@@ -64,13 +64,12 @@ namespace Character
             _characterController.PlayIdle();
         }
         
-        private async void OnMoveEnd()
+        private void OnMoveEnd()
         {
             if (_gameModel.GameState == GameState.StartGameplay)
             {
                 RotateCharacter();
                 _characterController.PlayWin();
-                await Task.Delay(1000);
             }
 
             if (_gameModel.GameState == GameState.Lose)
@@ -85,11 +84,29 @@ namespace Character
 
                 platform.gameObject.SetActive(false);
                 _characterController.PlayLose();
-                await Task.Delay(1500);
-                _characterController.SpriteRenderer.enabled = false;
-                _popupService.ShowPopup(PopupType.LosePopup);
+                
+                _coroutineRunner.StartAfterDelay(1.5f, () =>
+                {
+                    _characterController.SpriteRenderer.enabled = false;
+                    _popupService.ShowPopup(PopupType.LosePopup);
+                });
+
             }
         }
+        
+        public void SetNumberPlatformSync(int numberPlatform)
+        {
+            _currentCharacterPlatformNumber = numberPlatform;
+            if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
+            {
+                Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
+                _currentCharacterPlatformNumber--;
+                return;
+            }
+            
+            _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
+        }
+        
 
         public void RefreshCharacter()
         {
@@ -105,7 +122,7 @@ namespace Character
             _characterController.gameObject.transform.position = _characterSpawnRoot.position;
         }
 
-        public async Task SetNumberPlatform(int numberPlatform)
+        public void SetNumberPlatform(int numberPlatform)
         {
             _currentCharacterPlatformNumber = numberPlatform;
             
@@ -117,12 +134,16 @@ namespace Character
             }
             
             _characterController.PlayJump();
-            await Task.Delay(300);
-            _nextPlatformTransform = nextPlatformContainer.CharacterRoot;
-            _inMove = true;
+
+            _coroutineRunner.StartAfterDelay(0.3f, () =>
+            {
+                _nextPlatformTransform = nextPlatformContainer.CharacterRoot;
+                _inMove = true;
+            });
+
         }
 
-        public async Task MoveToNextPlatform()
+        public void MoveToNextPlatform()
         {
             _currentCharacterPlatformNumber++;
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
@@ -133,9 +154,12 @@ namespace Character
             }
 
             _characterController.PlayJump();
-            await Task.Delay(300);
-            _nextPlatformTransform = nextPlatformContainer.CharacterRoot;
-            _inMove = true;
+            
+            _coroutineRunner.StartAfterDelay(0.3f, () =>
+            {
+                _nextPlatformTransform = nextPlatformContainer.CharacterRoot;
+                _inMove = true;
+            });
         }
 
         public void RotateCharacter()

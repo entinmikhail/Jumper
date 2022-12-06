@@ -21,8 +21,8 @@ namespace GameModels.StateMachine
             for (int i = 1; i < _gameModel.CurrentAltitude + 3; i++)
                 _platformService.TryAddPlatformObjectByData(i);
             
-            _characterMover.SetNumberPlatform(_gameModel.CurrentAltitude);
-            _characterMover.RefreshCharacter();
+            _characterMover.SetNumberPlatformSync(_gameModel.CurrentAltitude);
+            // _characterMover.RefreshCharacter();
         }
 
         private void OnJumped(int index)
