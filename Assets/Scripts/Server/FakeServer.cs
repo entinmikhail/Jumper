@@ -82,7 +82,30 @@ namespace Server
                 _altitude = 1;
             
             _coefficient += 0.2f;
-            
+
+            if (_gameState.IsWithBonus)
+            {
+                _altitude = 15;
+                _coefficient = 10;
+                return new JumpResponse()
+                {
+                    Currency = _gameState.Currency,
+                    BetAmount = _gameState.BetAmount,
+                    IsWin = isWin,
+                    IsWithBonus = _gameState.IsWithBonus,
+                    Steps = isWin
+                        ? new[]
+                        {
+                            new Step
+                            {
+                                Altitude = _altitude,
+                                Coefficient = _coefficient
+                            }
+                        }
+                        : null
+                };
+            }
+
             return new JumpResponse()
             {
                 Currency = _gameState.Currency,

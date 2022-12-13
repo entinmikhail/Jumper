@@ -22,7 +22,6 @@ namespace GameModels.StateMachine
 
         private void OnJumped(int index)
         {
-            
             _platformService.TryAddPlatformObjectByData(index + 2);
             _characterMover.SetNumberPlatform(index);
         }

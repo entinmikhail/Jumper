@@ -15,7 +15,6 @@ namespace Character
         void SetNumberPlatformSync(int numberPlatform);
         void RefreshCharacter();
         void SetIdle();
-        void SetCharacterToBonusPosition();
         event Action PlatformBroke;
         event Action MoveEnd;
         void SetActive(bool value);
@@ -25,7 +24,6 @@ namespace Character
     {
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Transform _characterSpawnRoot;
-        [SerializeField] private Transform _characterBonusAnimationRoot;
         [SerializeField] private int _characterSpeed = 10;
 
         public event Action PlatformBroke;
@@ -39,7 +37,8 @@ namespace Character
         [Inject] private IGameModel _gameModel;
         [Inject] private IPopupService _popupService;
         [Inject] private ICoroutineRunner _coroutineRunner;
-        
+        private float _speed;
+
         private void Awake()
         {
             _gameModel.Jumped += numberPlatform => SetNumberPlatform(numberPlatform);
@@ -53,7 +52,7 @@ namespace Character
 
             _characterController.transform.position = Vector2.MoveTowards(
                 _characterController.transform.position, 
-                _nextPlatformTransform.position, 1 * Time.deltaTime * _characterSpeed);
+                _nextPlatformTransform.position, 1 * Time.deltaTime * _speed);
 
             if (_characterController.transform.position != _nextPlatformTransform.position)
                 return;
@@ -65,11 +64,10 @@ namespace Character
 
         public void SetIdle() => _characterController.PlayIdle();
         public void SetActive(bool value) => _characterController.SpriteRenderer.gameObject.SetActive(value);
-        public void SetCharacterToBonusPosition() => _characterController.transform.position = _characterBonusAnimationRoot.position;
 
         private void OnMoveEnd()
         {
-            if (_gameModel.GameState == GameState.StartGameplay)
+            if (_gameModel.GameState is GameState.StartGameplay or GameState.Bonus)
             {
                 RotateCharacter();
                 _characterController.PlayWin();
@@ -129,7 +127,6 @@ namespace Character
         {
             _currentCharacterPlatformNumber = numberPlatform;
 
-            Debug.LogError(numberPlatform);
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
@@ -138,7 +135,10 @@ namespace Character
             }
             
             _characterController.PlayJump();
-
+            
+            _speed = Vector2.Distance(nextPlatformContainer.CharacterRoot.position,
+                _characterController.transform.position) / 10;
+            
             _coroutineRunner.StartAfterDelay(0.3f, () =>
             {
                 _nextPlatformTransform = nextPlatformContainer.CharacterRoot;
@@ -158,6 +158,9 @@ namespace Character
             }
 
             _characterController.PlayJump();
+
+            _speed = Vector2.Distance(nextPlatformContainer.CharacterRoot.position,
+                _characterController.transform.position) / 3;
             
             _coroutineRunner.StartAfterDelay(0.3f, () =>
             {

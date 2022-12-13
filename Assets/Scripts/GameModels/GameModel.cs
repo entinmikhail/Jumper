@@ -73,15 +73,17 @@ namespace GameModels
                     BetAmount = BetAmount,
                     IsWithBonus = IsWithBonus
                 });
+                
 
                 if (IsWithBonus)
                 {
+                    RefreshData(jumpResponse); 
                     SetGameState(GameState.Bonus);
                 }
                 else
                 {
                     SetGameState(GameState.StartGameplay);
-                    RefreshData(jumpResponse); 
+                    RefreshData(jumpResponse);
                 }
 
                 return;
