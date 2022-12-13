@@ -16,6 +16,7 @@ namespace Character
         void RefreshCharacter();
         void SetIdle();
         event Action PlatformBroke;
+        event Action MoveEnd;
     }
 
     public class CharacterMover : MonoBehaviour, ICharacterMover

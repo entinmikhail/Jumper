@@ -1,4 +1,5 @@
 ﻿using System;
+using Character;
 using Server;
 using Zenject;
 
@@ -6,8 +7,15 @@ namespace GameModels
 {
     public interface IGameModel
     {
+        void Initialize(InitialStateResponse initialStateResponse);
+        void Jump();
+        void CashOut();
+        void SetGameState(GameState newGameState);
+        void BuyBonusJump();
+        
         event Action<GameState> GameStateChanged;
         event Action<int> Jumped;
+        
         float BetAmount { get; set; }
         string Currency { get; set; }
         bool IsWin { get; set; }
@@ -17,10 +25,6 @@ namespace GameModels
         float CurrentCoefficient { get; set; }
         float WinAmount { get; set; }
         GameState GameState { get; set; }
-        void Initialize(InitialStateResponse initialStateResponse);
-        void Jump();
-        void CashOut();
-        void SetGameState(GameState newGameState);
     }
 
     public class GameModel : IGameModel
@@ -52,6 +56,8 @@ namespace GameModels
             _fakeServer.BalanceChanged += OnBalanceChanged;
         }
 
+
+
         private void OnBalanceChanged(float newBalance)
         {
             _accountModel.CurrentBalance = newBalance;
@@ -75,6 +81,11 @@ namespace GameModels
             
             var response = _fakeServer.Jump();
             RefreshData(response);
+        }
+
+        public void BuyBonusJump()
+        {
+            IsWithBonus = true;
         }
 
         public void CashOut()
@@ -134,7 +145,7 @@ namespace GameModels
             Currency = cashOutResponse.Currency;
             IsWin = cashOutResponse.IsWin;
             WinAmount = cashOutResponse.WinAmount;
-            
+            IsWithBonus = false;
             SetGameState(GameState.Win);
         }
         
@@ -142,7 +153,8 @@ namespace GameModels
         {
             CurrentAltitude = 0;
             CurrentCoefficient = 0;
-            
+            IsWithBonus = false;
+
             SetGameState(GameState.Lose);
         }
 

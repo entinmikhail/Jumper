@@ -1,5 +1,8 @@
-﻿using GameModels;
+﻿using System;
+using Character;
+using GameModels;
 using Services;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -12,20 +15,47 @@ namespace UIControllers
         [SerializeField] private Button _cashOutButton;
         [SerializeField] private Button _bonusBuyButton;
         [SerializeField] private UIBetPanel _uiBetPanel;
+        [SerializeField] private TextMeshProUGUI _cashOutText;
 
         [Inject] private IGameModel _gameModel;
-        [Inject] private IUiLocker _uiLocker;
         [Inject] private ICoroutineRunner _coroutineRunner;
+        [Inject] private ICharacterMover _characterMover;
+        
 
         private void Awake()
         {
             _jumpButton.onClick.AddListener(OnJump);
             _cashOutButton.onClick.AddListener(OnCashOut);
+            _bonusBuyButton.onClick.AddListener(OnBonusJump);
+            
             _gameModel.GameStateChanged += OnContinueGame;
+            _characterMover.MoveEnd += OnMoveEnd;
         }
 
-        private void OnContinueGame(GameState obj)
+        private void OnMoveEnd()
         {
+            _cashOutText.text = $"$ {Math.Round(_gameModel.BetAmount * _gameModel.CurrentCoefficient, 2)}";
+        }
+
+        private void OnBonusJump()
+        {
+            _gameModel.BuyBonusJump();
+        }
+
+        private void OnContinueGame(GameState gameState)
+        {
+            if (gameState == GameState.PrepareGameState)
+            {
+                _cashOutButton.gameObject.SetActive(false);
+                _bonusBuyButton.gameObject.SetActive(true);
+
+            }
+            else
+            {
+                _cashOutButton.gameObject.SetActive(true);
+                _bonusBuyButton.gameObject.SetActive(false);
+            }
+            
             _uiBetPanel.CurrentBet = _gameModel.BetAmount;
         }
 
