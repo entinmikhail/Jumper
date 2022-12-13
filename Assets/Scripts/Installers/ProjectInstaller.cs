@@ -13,7 +13,7 @@ public class ProjectInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.Bind<ICoroutineRunner>().FromInstance(_coroutineRunner).AsSingle();
-        Container.Bind<IFakeServer>().FromInstance(_fakeServer).AsSingle();
+        Container.Bind<IServer>().FromInstance(_fakeServer).AsSingle();
 
         Container.Bind<IGame>().To<Game>().AsSingle();
         Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();

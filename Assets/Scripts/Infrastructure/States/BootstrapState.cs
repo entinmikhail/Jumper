@@ -13,7 +13,7 @@ namespace Infrastructure.States
         private const string Initial = "Initial";
         private const string Payload = "Main";
 
-        [Inject] private IFakeServer _fakeServer;
+        [Inject] private IServer _fakeServer;
         [Inject] private ISceneLoader _sceneLoader;
         [Inject] private IGameStateMachine _gameStateMachine;
 

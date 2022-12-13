@@ -37,7 +37,7 @@ namespace GameModels
         public float CurrentCoefficient { get; set; }
         public float WinAmount { get; set; }
         
-        [Inject] private IFakeServer _fakeServer;
+        [Inject] private IServer _fakeServer;
         [Inject] private IAccountModel _accountModel;
         
         public void Initialize(InitialStateResponse initialStateResponse)

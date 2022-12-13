@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 namespace Server
 {
-    public interface IFakeServer
+    public interface IServer
     {
         event Action<float> BalanceChanged;
         void InitializeConnection();
@@ -14,7 +14,7 @@ namespace Server
         JumpResponse Jump();
     }
 
-    public class FakeServer : MonoBehaviour, IFakeServer
+    public class FakeServer : MonoBehaviour, IServer
     {
         private InitialStateResponse _gameState = null;
         private int _altitude = 0;

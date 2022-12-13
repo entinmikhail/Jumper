@@ -9,7 +9,7 @@ namespace GameModels.StateMachine
     public class GameLoopState : IGameLoopState
     {
         [Inject] private IGameModel _gameModel;
-        [Inject] private IFakeServer _fakeServer;
+        [Inject] private IServer _fakeServer;
 
         public void Exit()
         {

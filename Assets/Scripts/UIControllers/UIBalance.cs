@@ -9,7 +9,7 @@ namespace UIControllers
     public class UIBalance : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _textMesh;
-        [Inject] private IFakeServer _fakeServer;
+        [Inject] private IServer _fakeServer;
 
         private void Awake()
         {
