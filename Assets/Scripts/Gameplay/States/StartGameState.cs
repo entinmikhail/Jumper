@@ -17,10 +17,12 @@ namespace GameModels.StateMachine
         public void Enter()
         {
             _gameModel.Jumped += OnJumped;
+            _characterMover.SetActive(true);
         }
 
         private void OnJumped(int index)
         {
+            
             _platformService.TryAddPlatformObjectByData(index + 2);
             _characterMover.SetNumberPlatform(index);
         }

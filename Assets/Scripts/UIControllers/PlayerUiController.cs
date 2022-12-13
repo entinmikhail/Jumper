@@ -1,7 +1,6 @@
 ﻿using System;
 using Character;
 using GameModels;
-using Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +39,7 @@ namespace UIControllers
         private void OnBonusJump()
         {
             _gameModel.BuyBonusJump();
+            _bonusBuyButton.interactable = false;
         }
 
         private void OnContinueGame(GameState gameState)
@@ -54,6 +54,7 @@ namespace UIControllers
             {
                 _cashOutButton.gameObject.SetActive(true);
                 _bonusBuyButton.gameObject.SetActive(false);
+                _bonusBuyButton.interactable = true;
             }
             
             _uiBetPanel.CurrentBet = _gameModel.BetAmount;

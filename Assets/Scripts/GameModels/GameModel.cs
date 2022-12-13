@@ -73,9 +73,17 @@ namespace GameModels
                     BetAmount = BetAmount,
                     IsWithBonus = IsWithBonus
                 });
-                
-                SetGameState(GameState.StartGameplay);
-                RefreshData(jumpResponse);
+
+                if (IsWithBonus)
+                {
+                    SetGameState(GameState.Bonus);
+                }
+                else
+                {
+                    SetGameState(GameState.StartGameplay);
+                    RefreshData(jumpResponse); 
+                }
+
                 return;
             }
             
@@ -86,6 +94,7 @@ namespace GameModels
         public void BuyBonusJump()
         {
             IsWithBonus = true;
+            _accountModel.CurrentBalance -= 100;
         }
 
         public void CashOut()

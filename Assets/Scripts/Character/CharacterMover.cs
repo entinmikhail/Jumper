@@ -15,14 +15,17 @@ namespace Character
         void SetNumberPlatformSync(int numberPlatform);
         void RefreshCharacter();
         void SetIdle();
+        void SetCharacterToBonusPosition();
         event Action PlatformBroke;
         event Action MoveEnd;
+        void SetActive(bool value);
     }
 
     public class CharacterMover : MonoBehaviour, ICharacterMover
     {
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Transform _characterSpawnRoot;
+        [SerializeField] private Transform _characterBonusAnimationRoot;
         [SerializeField] private int _characterSpeed = 10;
 
         public event Action PlatformBroke;
@@ -60,11 +63,10 @@ namespace Character
             MoveEnd?.Invoke();
         }
 
-        public void SetIdle()
-        { 
-            _characterController.PlayIdle();
-        }
-        
+        public void SetIdle() => _characterController.PlayIdle();
+        public void SetActive(bool value) => _characterController.SpriteRenderer.gameObject.SetActive(value);
+        public void SetCharacterToBonusPosition() => _characterController.transform.position = _characterBonusAnimationRoot.position;
+
         private void OnMoveEnd()
         {
             if (_gameModel.GameState == GameState.StartGameplay)
@@ -126,7 +128,8 @@ namespace Character
         public void SetNumberPlatform(int numberPlatform)
         {
             _currentCharacterPlatformNumber = numberPlatform;
-            
+
+            Debug.LogError(numberPlatform);
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");

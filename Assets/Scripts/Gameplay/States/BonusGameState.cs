@@ -1,4 +1,7 @@
-﻿using GameModels.StateMachine;
+﻿using Character;
+using GameModels.StateMachine;
+using UIControllers;
+using Zenject;
 
 namespace Gameplay
 {
@@ -8,14 +11,24 @@ namespace Gameplay
 
     public class BonusGameState : IBonusGameState
     {
-        public void Exit()
-        {
-            throw new System.NotImplementedException();
-        }
+        [Inject] private IGameAnimatorController _gameAnimatorController;
+        [Inject] private ICoroutineRunner _coroutineRunner;
+        [Inject] private IGameLoopStateMachine _gameLoopStateMachine;
+        [Inject] private ICharacterMover _characterMover;
 
         public void Enter()
         {
-            throw new System.NotImplementedException();
+            _gameAnimatorController.PlayBonusJump();
+            _coroutineRunner.StartAfterDelay(3, () =>
+            {
+                _gameLoopStateMachine.Enter<StartGameState>();
+            });
+            
+        }
+
+        public void Exit()
+        {
+            _characterMover.SetCharacterToBonusPosition();
         }
     }
 }

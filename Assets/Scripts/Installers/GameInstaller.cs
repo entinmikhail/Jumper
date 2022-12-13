@@ -5,6 +5,7 @@ using Gameplay;
 using Platforms;
 using Popups;
 using Services;
+using UIControllers;
 using UnityEngine;
 using Zenject;
 
@@ -13,12 +14,14 @@ public class GameInstaller : MonoInstaller
     [SerializeField] private CharacterMover _characterMover;
     [SerializeField] private PlatformCreator _platformCreator;
     [SerializeField] private PopupService _popupService;
+    [SerializeField] private GameAnimatorController _gameAnimatorController;
 
     public override void InstallBindings()
     {
         Container.Bind<ICharacterMover>().FromInstance(_characterMover).AsSingle();
         Container.Bind<IPlatformCreator>().FromInstance(_platformCreator).AsSingle();
         Container.Bind<IPopupService>().FromInstance(_popupService).AsSingle();
+        Container.Bind<IGameAnimatorController>().FromInstance(_gameAnimatorController).AsSingle();
         
         Container.Bind<IPlatformService>().To<PlatformService>().AsSingle();
         Container.Bind<IGameStateController>().To<GameStateController>().AsSingle();

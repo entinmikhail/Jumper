@@ -29,11 +29,13 @@ public class GameStateController : IGameStateController
             case GameState.StartGameplay: OnStart(); break;
             case GameState.Lose: OnLose(); break;
             case GameState.Win: OnWin(); break;
+            case GameState.Bonus: OnBonus(); break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(gameState), gameState, null);
         }
     }
 
+    private void OnBonus() => _gameLoopStateMachine.Enter<BonusGameState>();
     private void OnPrepare() => _gameLoopStateMachine.Enter<PrepareGameState>();
     private void OnStart() => _gameLoopStateMachine.Enter<StartGameState>();
     private void OnLose() => _gameLoopStateMachine.Enter<LoseGameState>();
