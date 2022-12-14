@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31284e5847954dae916ce2eee2e8987b, type: 3}
+  m_Name: AnimationDurationConfig
+  m_EditorClassIdentifier: 
+  _awaitingBonusAnimationTime: 0.5
+  _bonusRotateAnimationTime: 2
+  _defaultJumpAnimationTime: 0.5
+  _bonusJumpAnimationTime: 4
+  _idleDelayAnimationTime: 0.3
+  _loseAnimationTime: 1.5
+  _winAnimationTime: 1

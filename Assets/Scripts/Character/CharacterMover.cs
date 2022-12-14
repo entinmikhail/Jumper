@@ -1,4 +1,5 @@
 ﻿using System;
+using Configs;
 using GameModels;
 using Platforms;
 using Popups;
@@ -9,10 +10,10 @@ namespace Character
 {
     public interface ICharacterMover
     {
-        void MoveToNextPlatform();
+        void MoveToNextPlatform(float time);
         void ResetCharacterPosition();
-        void SetNumberPlatform(int numberPlatform);
-        void SetNumberPlatformSync(int numberPlatform);
+        void SetNumberPlatform(int numberPlatform, float time);
+        void SetNumberPlatformWithoutAnimation(int numberPlatform);
         void RefreshCharacter();
         void SetIdle();
         event Action PlatformBroke;
@@ -24,24 +25,25 @@ namespace Character
     {
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Transform _characterSpawnRoot;
-        [SerializeField] private int _characterSpeed = 10;
 
         public event Action PlatformBroke;
         public event Action MoveEnd;
+
+        private Transform _nextPlatformTransform;
         
         private int _currentCharacterPlatformNumber;
-        private Transform _nextPlatformTransform;
+        private float _speed;
         private bool _inMove;
-        
-        [Inject] private IPlatformService _platformService;
+
         [Inject] private IGameModel _gameModel;
         [Inject] private IPopupService _popupService;
         [Inject] private ICoroutineRunner _coroutineRunner;
-        private float _speed;
+        [Inject] private IPlatformService _platformService;
+        [Inject] private IAnimationDurationConfig _animationDurationConfig;
 
         private void Awake()
         {
-            _gameModel.Jumped += numberPlatform => SetNumberPlatform(numberPlatform);
+            _gameModel.Jumped += numberPlatform => SetNumberPlatform(numberPlatform, _animationDurationConfig.DefaultJumpAnimationTime);
             MoveEnd += OnMoveEnd;
         }
         
@@ -83,19 +85,22 @@ namespace Character
                     return;
                 }
 
-                platform.gameObject.SetActive(false);
+                _coroutineRunner.StartAfterDelay(_animationDurationConfig.IdleDelayAnimationTime, () =>
+                {
+                    platform.gameObject.SetActive(false);
+                });
+                
                 _characterController.PlayLose();
                 
-                _coroutineRunner.StartAfterDelay(1.5f, () =>
+                _coroutineRunner.StartAfterDelay(_animationDurationConfig.LoseAnimationTime, () =>
                 {
                     _characterController.SpriteRenderer.enabled = false;
                     _popupService.ShowPopup(PopupType.LosePopup);
                 });
-
             }
         }
         
-        public void SetNumberPlatformSync(int numberPlatform)
+        public void SetNumberPlatformWithoutAnimation(int numberPlatform)
         {
             _currentCharacterPlatformNumber = numberPlatform;
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
@@ -123,7 +128,7 @@ namespace Character
             _characterController.gameObject.transform.position = _characterSpawnRoot.position;
         }
 
-        public void SetNumberPlatform(int numberPlatform)
+        public void SetNumberPlatform(int numberPlatform, float time)
         {
             _currentCharacterPlatformNumber = numberPlatform;
 
@@ -136,18 +141,16 @@ namespace Character
             
             _characterController.PlayJump();
             
-            _speed = Vector2.Distance(nextPlatformContainer.CharacterRoot.position,
-                _characterController.transform.position) / 10;
+            _speed = Vector2.Distance(nextPlatformContainer.CharacterRoot.position, _characterController.transform.position) / time;
             
-            _coroutineRunner.StartAfterDelay(0.3f, () =>
+            _coroutineRunner.StartAfterDelay(_animationDurationConfig.IdleDelayAnimationTime, () =>
             {
                 _nextPlatformTransform = nextPlatformContainer.CharacterRoot;
                 _inMove = true;
             });
-
         }
 
-        public void MoveToNextPlatform()
+        public void MoveToNextPlatform(float time)
         {
             _currentCharacterPlatformNumber++;
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
@@ -159,10 +162,9 @@ namespace Character
 
             _characterController.PlayJump();
 
-            _speed = Vector2.Distance(nextPlatformContainer.CharacterRoot.position,
-                _characterController.transform.position) / 3;
+            _speed = Vector2.Distance(nextPlatformContainer.CharacterRoot.position, _characterController.transform.position) / time;
             
-            _coroutineRunner.StartAfterDelay(0.3f, () =>
+            _coroutineRunner.StartAfterDelay(_animationDurationConfig.IdleDelayAnimationTime, () =>
             {
                 _nextPlatformTransform = nextPlatformContainer.CharacterRoot;
                 _inMove = true;

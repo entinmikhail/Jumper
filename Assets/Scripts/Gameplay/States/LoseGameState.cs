@@ -1,4 +1,5 @@
 ﻿using Character;
+using Configs;
 using GameModels.StateMachine;
 using Platforms;
 using Zenject;
@@ -13,10 +14,11 @@ namespace Gameplay
     {
         [Inject] private IPlatformService _platformService;
         [Inject] private ICharacterMover _characterMover;
+        [Inject] private IAnimationDurationConfig _animationDurationConfig;
 
         public void Enter()
         {
-            _characterMover.MoveToNextPlatform();
+            _characterMover.MoveToNextPlatform(_animationDurationConfig.DefaultJumpAnimationTime);
         }
 
         public void Exit()

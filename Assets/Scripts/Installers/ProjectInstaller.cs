@@ -1,3 +1,4 @@
+using Configs;
 using GameModels;
 using GameModels.StateMachine;
 using Infrastructure.States;
@@ -9,11 +10,13 @@ public class ProjectInstaller : MonoInstaller
 {
     [SerializeField] private CoroutineRunner _coroutineRunner;
     [SerializeField] private FakeServer _fakeServer;
+    [SerializeField] private AnimationDurationConfig _animationDurationConfig;
 
     public override void InstallBindings()
     {
         Container.Bind<ICoroutineRunner>().FromInstance(_coroutineRunner).AsSingle();
         Container.Bind<IServer>().FromInstance(_fakeServer).AsSingle();
+        Container.Bind<IAnimationDurationConfig>().FromInstance(_animationDurationConfig).AsSingle();
 
         Container.Bind<IGame>().To<Game>().AsSingle();
         Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();

@@ -17,10 +17,10 @@ namespace UIControllers
         [SerializeField] private TextMeshProUGUI _cashOutText;
 
         [Inject] private IGameModel _gameModel;
-        [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private ICharacterMover _characterMover;
+        [Inject] private ICoroutineRunner _coroutineRunner;
+        [Inject] private INotificationService _notificationService;
         
-
         private void Awake()
         {
             _jumpButton.onClick.AddListener(OnJump);
@@ -69,7 +69,7 @@ namespace UIControllers
         {
             if (_uiBetPanel.CurrentBet <= 0)
             {
-                Debug.LogError("Сделайте ставку");
+                _notificationService.ShowNotification("Сделайте ставку");
                 return;
             }
             
