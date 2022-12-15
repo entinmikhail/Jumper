@@ -5,17 +5,31 @@ namespace Platforms
     public class PlatformContainer : MonoBehaviour
     {
         [SerializeField] private Transform _characterRoot;
-        [SerializeField] private Transform _bonusRoot;
-
+        [SerializeField] private GameObject _extraJump;
+        [SerializeField] private GameObject _extraFactor;
+        
         public Transform CharacterRoot => _characterRoot;
-        public Transform BonusRoot => _bonusRoot;
-        public PlatformData PlatformData => _platformData;
+        public BonusType BonusType { get; private set; }
 
-        private PlatformData _platformData;
-
-        public void SetData(PlatformData platformData)
+        public void SetData(BonusType bonusType)
         {
-            _platformData = platformData;
+            BonusType = bonusType;
+            _extraFactor.SetActive(false);
+            _extraJump.SetActive(false);
+            
+            switch (bonusType)
+            {
+                case BonusType.Non:
+                    break;
+                case BonusType.ExtraJump:
+                    _extraJump.SetActive(true);
+                    break;
+                case BonusType.ExtraFactor:
+                    _extraFactor.SetActive(true);
+                    break;
+                case BonusType.Unknown:
+                    break;
+            }
         }
     }
 }

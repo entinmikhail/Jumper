@@ -7,7 +7,9 @@ namespace Popups
     public enum PopupType
     {
         WinPopup,
-        LosePopup
+        LosePopup,
+        ExtraFactorBonusPopup,
+        ExtraJumpBonusPopup,
     }
 
     public interface IPopupService
@@ -19,6 +21,8 @@ namespace Popups
     {
         [SerializeField] private WinPopup _winPopupBase;
         [SerializeField] private LosePopup _losePopup;
+        [SerializeField] private ExtraFactorBonusPopup _extraFactorBonusPopup;
+        [SerializeField] private ExtraJumpBonusPopup _extraJumpBonusPopup;
 
         private Dictionary<PopupType, PopupBase> _popupsByType = new();
 
@@ -28,7 +32,10 @@ namespace Popups
             {
                 { PopupType.LosePopup, _losePopup },
                 { PopupType.WinPopup, _winPopupBase },
+                { PopupType.ExtraFactorBonusPopup, _extraFactorBonusPopup },
+                { PopupType.ExtraJumpBonusPopup, _extraJumpBonusPopup },
             };
+            
         }
 
         public void ShowPopup(PopupType popupTypeType)

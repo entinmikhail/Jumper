@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Character;
+using Platforms;
 using Server;
+using UnityEngine;
 using Zenject;
 
 namespace GameModels
@@ -15,6 +18,7 @@ namespace GameModels
         
         event Action<GameState> GameStateChanged;
         event Action<int> Jumped;
+        event Action<int, BonusType> BonusPiked;
         
         float BetAmount { get; set; }
         string Currency { get; set; }
@@ -25,12 +29,14 @@ namespace GameModels
         float CurrentCoefficient { get; set; }
         float WinAmount { get; set; }
         GameState GameState { get; set; }
+        Dictionary<int, BonusType> BonusTypes { get; }
     }
 
     public class GameModel : IGameModel
     {
         public event Action<GameState> GameStateChanged;
         public event Action<int> Jumped;
+        public event Action<int, BonusType> BonusPiked;
         public GameState GameState { get; set; }
         public float BetAmount { get; set; }
         public string Currency { get; set; }
@@ -40,7 +46,9 @@ namespace GameModels
         public int CurrentAltitude { get; set; }
         public float CurrentCoefficient { get; set; }
         public float WinAmount { get; set; }
-        
+
+        public Dictionary<int, BonusType> BonusTypes { get; } = new();
+
         [Inject] private IServer _fakeServer;
         [Inject] private IAccountModel _accountModel;
         
@@ -55,9 +63,7 @@ namespace GameModels
             ContinueGame(initialStateResponse);
             _fakeServer.BalanceChanged += OnBalanceChanged;
         }
-
-
-
+        
         private void OnBalanceChanged(float newBalance)
         {
             _accountModel.CurrentBalance = newBalance;
@@ -117,7 +123,7 @@ namespace GameModels
             
             BetAmount = jumpResponse.BetAmount;
             Currency = jumpResponse.Currency;
-            IsWithBonus = jumpResponse.IsWithBonus;
+            IsWithBonus = jumpResponse.IsWithBonusNextWithBonus;
 
             foreach (var step in jumpResponse.Steps)
                 JumpToPlatform(step);
@@ -145,8 +151,23 @@ namespace GameModels
         {
             CurrentCoefficient = step.Coefficient;
             CurrentAltitude = step.Altitude;
-            LastStep = step;
+
+            if (BonusTypes.ContainsKey(step.Altitude))
+                BonusTypes[step.Altitude+1] = step.Box;
+            else
+                BonusTypes.Add(step.Altitude+1, step.Box);
+
+            if (BonusTypes.TryGetValue(step.Altitude, out var bonusType))
+            {
+                if (bonusType is BonusType.ExtraJump or BonusType.ExtraFactor)
+                {
+                    Debug.LogError(bonusType.ToString());
+                    BonusPiked?.Invoke(step.Altitude, bonusType);
+                }
+            }
             
+            LastStep = step;
+
             Jumped?.Invoke(CurrentAltitude);
         }
 
@@ -166,6 +187,7 @@ namespace GameModels
             CurrentCoefficient = 0;
             IsWithBonus = false;
 
+            BonusTypes.Clear();
             SetGameState(GameState.Lose);
         }
 

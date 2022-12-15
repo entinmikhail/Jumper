@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 namespace Platforms
 {
     public interface IPlatformCreator
     {
-        PlatformContainer CreatePlatform(int currentNumber);
+        PlatformContainer CreatePlatform(int currentNumber, BonusType bonusType);
     }
 
     public class PlatformCreator : MonoBehaviour, IPlatformCreator
@@ -12,8 +13,8 @@ namespace Platforms
         [SerializeField] private PlatformContainer _platformPrefab;
         [SerializeField] private Transform _platformSpawnRoot;
         [SerializeField] private Vector2 _platformOffset;
-        
-        public PlatformContainer CreatePlatform(int currentNumber)
+
+        public PlatformContainer CreatePlatform(int currentNumber, BonusType bonusType)
         {
             var platform = Instantiate(_platformPrefab, _platformSpawnRoot.position, Quaternion.identity);
             var platformTransform = platform.transform;
@@ -21,6 +22,8 @@ namespace Platforms
             platformTransform.position = new Vector3(posX, _platformOffset.y * currentNumber);
             platform.gameObject.name = $"Platform - {currentNumber}";
             platform.gameObject.SetActive(true);
+            
+            platform.SetData(bonusType);
             
             return platform;
         }

@@ -1,4 +1,5 @@
 using System;
+using Platforms;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -55,10 +56,11 @@ namespace Server
                 Steps = new []{new Step()
                 {
                     Altitude = _altitude,
-                    Coefficient = _coefficient
+                    Coefficient = _coefficient,
+                    Box = BonusType.Non
                 }}
             };
-            return Random.Range(0, 100) > 75 ? _gameState : null;
+            // return Random.Range(0, 100) > 75 ? _gameState : null;
             return _gameState;
             return null;
         }
@@ -92,14 +94,15 @@ namespace Server
                     Currency = _gameState.Currency,
                     BetAmount = _gameState.BetAmount,
                     IsWin = isWin,
-                    IsWithBonus = _gameState.IsWithBonus,
+                    IsWithBonusNextWithBonus = _gameState.IsWithBonus,
                     Steps = isWin
                         ? new[]
                         {
                             new Step
                             {
                                 Altitude = _altitude,
-                                Coefficient = _coefficient
+                                Coefficient = _coefficient,
+                                Box = BonusType.Non
                             }
                         }
                         : null
@@ -111,12 +114,13 @@ namespace Server
                 Currency = _gameState.Currency,
                 BetAmount = _gameState.BetAmount,
                 IsWin = isWin,
-                IsWithBonus = _gameState.IsWithBonus,
+                IsWithBonusNextWithBonus = _gameState.IsWithBonus,
                 Steps = isWin
                     ? new []{new Step
                     {
                         Altitude = _altitude,
-                        Coefficient = _coefficient
+                        Coefficient = _coefficient,
+                        Box = BonusType.Non
                     }}
                     : null
             };
@@ -166,6 +170,7 @@ namespace Server
             _coefficient += Random.Range(0.1f, 0.3f);
 
             if (isWin && Random.Range(0, 100) < 20)
+            // if (true)
             {
                 _altitude++;
                 var bonusFactor = Random.Range(0.1f, 0.3f);
@@ -175,17 +180,18 @@ namespace Server
                     Currency = _gameState.Currency,
                     BetAmount = _gameState.BetAmount,
                     IsWin = isWin,
-                    IsWithBonus = _gameState.IsWithBonus,
+                    IsWithBonusNextWithBonus = _gameState.IsWithBonus,
                     
                     Steps = new []
                     { 
-                            new Step { Altitude = _altitude - 1, Coefficient = _coefficient - bonusFactor, Box = "PLUS1" },
-                            new Step { Altitude = _altitude, Coefficient = _coefficient }
+                            new Step { Altitude = _altitude - 1, Coefficient = _coefficient - bonusFactor, Box = BonusType.ExtraJump },
+                            new Step { Altitude = _altitude, Coefficient = _coefficient, Box = BonusType.Non }
                     }
                 };
             }
 
-            if (isWin && Random.Range(0, 100) < 20)
+            // if (isWin && Random.Range(0, 100) < 20)
+            if (true)
             {
                 _coefficient *= 2;
                 
@@ -194,13 +200,13 @@ namespace Server
                     Currency = _gameState.Currency,
                     BetAmount = _gameState.BetAmount,
                     IsWin = isWin,
-                    IsWithBonus = _gameState.IsWithBonus,
+                    IsWithBonusNextWithBonus = _gameState.IsWithBonus,
                     Steps = isWin
                         ? new []{ new Step
                         {
                             Altitude = _altitude,
                             Coefficient = _coefficient,
-                            Box = "X2" 
+                            Box = BonusType.ExtraFactor 
                         }} 
                         : null
                 };
@@ -211,12 +217,13 @@ namespace Server
                 Currency = _gameState.Currency,
                 BetAmount = _gameState.BetAmount,
                 IsWin = isWin,
-                IsWithBonus = _gameState.IsWithBonus,
+                IsWithBonusNextWithBonus = _gameState.IsWithBonus,
                 Steps = isWin
                     ? new []{ new Step
                     {
                         Altitude = _altitude,
-                        Coefficient = _coefficient
+                        Coefficient = _coefficient,
+                        Box = BonusType.Non
                     }} 
                     : null
             };
@@ -244,7 +251,7 @@ namespace Server
         public float BetAmount;
         public string Currency;
         public bool IsWin;
-        public bool IsWithBonus;
+        public bool IsWithBonusNextWithBonus;
         public Step[] Steps;
     }
     public record CashOutResponse
@@ -259,6 +266,6 @@ namespace Server
     {
         public int Altitude;
         public float Coefficient;
-        public string Box;
+        public BonusType Box;
     }
 }

@@ -4,7 +4,8 @@
     {
         Non,
         ExtraJump,
-        ExtraMultiplayer
+        ExtraFactor,
+        Unknown
     }
     
     public class PlatformData

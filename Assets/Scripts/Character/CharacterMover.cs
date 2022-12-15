@@ -19,6 +19,7 @@ namespace Character
         event Action PlatformBroke;
         event Action MoveEnd;
         void SetActive(bool value);
+        void RotateCharacter();
     }
 
     public class CharacterMover : MonoBehaviour, ICharacterMover
@@ -43,7 +44,6 @@ namespace Character
 
         private void Awake()
         {
-            _gameModel.Jumped += numberPlatform => SetNumberPlatform(numberPlatform, _animationDurationConfig.DefaultJumpAnimationTime);
             MoveEnd += OnMoveEnd;
         }
         
@@ -69,7 +69,7 @@ namespace Character
 
         private void OnMoveEnd()
         {
-            if (_gameModel.GameState is GameState.StartGameplay or GameState.Bonus)
+            if (_gameModel.GameState is GameState.StartGameplay or GameState.Bonus or GameState.ContinueGameAfterLogin)
             {
                 RotateCharacter();
                 _characterController.PlayWin();
