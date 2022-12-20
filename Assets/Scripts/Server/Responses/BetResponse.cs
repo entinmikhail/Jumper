@@ -9,6 +9,6 @@ namespace Server
         public string currency;
         public bool isWin;
         public bool isWithBonus;
-        public NewStep[] steps;
+        public Step[] steps;
     }
 }

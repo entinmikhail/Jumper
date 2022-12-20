@@ -37,7 +37,7 @@ public class GameStateController : IGameStateController
 
     private void OnBonus() => _gameLoopStateMachine.Enter<BonusGameState>();
     private void OnPrepare() => _gameLoopStateMachine.Enter<PrepareGameState>();
-    private void OnStart() => _gameLoopStateMachine.Enter<StartGameState>();
+    private void OnStart() => _gameLoopStateMachine.Enter<MainGameState>();
     private void OnLose() => _gameLoopStateMachine.Enter<LoseGameState>();
     private void OnWin() => _gameLoopStateMachine.Enter<WinGameState>();
     private void OnContinue() => _gameLoopStateMachine.Enter<ContinueGameState>();

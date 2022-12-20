@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace GameModels.StateMachine
 {
@@ -16,7 +15,6 @@ namespace GameModels.StateMachine
         public void Enter<TState>() where TState : class, IState
         {
             var state = ChangeState<TState>();
-            Debug.Log(typeof(TState).Name);
             state.Enter();
         }
 

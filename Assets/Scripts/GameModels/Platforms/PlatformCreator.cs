@@ -5,7 +5,7 @@ namespace Platforms
 {
     public interface IPlatformCreator
     {
-        PlatformContainer CreatePlatform(int currentNumber, BonusType bonusType);
+        PlatformContainer CreatePlatform(int currentNumber);
     }
 
     public class PlatformCreator : MonoBehaviour, IPlatformCreator
@@ -14,7 +14,7 @@ namespace Platforms
         [SerializeField] private Transform _platformSpawnRoot;
         [SerializeField] private Vector2 _platformOffset;
 
-        public PlatformContainer CreatePlatform(int currentNumber, BonusType bonusType)
+        public PlatformContainer CreatePlatform(int currentNumber)
         {
             var platform = Instantiate(_platformPrefab, _platformSpawnRoot.position, Quaternion.identity);
             var platformTransform = platform.transform;
@@ -22,8 +22,6 @@ namespace Platforms
             platformTransform.position = new Vector3(posX, _platformOffset.y * currentNumber);
             platform.gameObject.name = $"Platform - {currentNumber}";
             platform.gameObject.SetActive(true);
-            
-            platform.SetData(bonusType);
             
             return platform;
         }

@@ -18,7 +18,7 @@ namespace Gameplay
         private StateMachine _stateMachine;
         
         [Inject] private IPrepareGameState _prepareGameState;
-        [Inject] private IStartGameState _startGameState;
+        [Inject] private IMainGameState _mainGameState;
         [Inject] private IContinueGameState _continueGameState;
         [Inject] private IWinGameState _winGameState;
         [Inject] private ILoseGameState _loseGameState;
@@ -30,7 +30,7 @@ namespace Gameplay
             {
                 { typeof(PrepareGameState), _prepareGameState },
                 { typeof(ContinueGameState), _continueGameState },
-                { typeof(StartGameState), _startGameState },
+                { typeof(MainGameState), _mainGameState },
                 { typeof(WinGameState), _winGameState },
                 { typeof(LoseGameState), _loseGameState },
                 { typeof(BonusGameState), _bonusGameState },

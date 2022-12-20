@@ -11,7 +11,7 @@ namespace Platforms
         public Transform CharacterRoot => _characterRoot;
         public BonusType BonusType { get; private set; }
 
-        public void SetData(BonusType bonusType)
+        public void SetBonus(BonusType bonusType)
         {
             BonusType = bonusType;
             _extraFactor.SetActive(false);

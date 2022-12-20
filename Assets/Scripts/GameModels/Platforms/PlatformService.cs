@@ -20,7 +20,8 @@ namespace Platforms
         private int _currentNumber = 1;
 
         [Inject] private IPlatformCreator _platformCreator;
-        [Inject] private IGameModel _gameModel;
+        [Inject] private IGameStorage _gameStorage;
+
 
         public void ResetPlatformsData()
         {
@@ -36,24 +37,21 @@ namespace Platforms
                 return false;
             
             _currentNumber++;
-            return _platformContainersByNumber.TryAdd(_currentNumber, _platformCreator.CreatePlatform(_currentNumber, _gameModel.BonusTypes[_currentNumber]));
+            
+            return _platformContainersByNumber.TryAdd(_currentNumber, _platformCreator.CreatePlatform(_currentNumber));
         }
         
         public bool TryAddPlatformObjectByData(int currentNumber)
         {
-            
-            if (!_gameModel.BonusTypes.TryGetValue(currentNumber, out var bonusType))
-                bonusType = BonusType.Unknown;
 
             if (_platformContainersByNumber.TryGetValue(currentNumber, out var platformContainer))
             {
-                platformContainer.SetData(bonusType);
                 return false;
             }
                     
             _currentNumber = currentNumber;
    
-            return _platformContainersByNumber.TryAdd(currentNumber, _platformCreator.CreatePlatform(currentNumber, bonusType));
+            return _platformContainersByNumber.TryAdd(currentNumber, _platformCreator.CreatePlatform(currentNumber));
         }
 
         public bool TryGetPlatformContainer(int currentNumber, out PlatformContainer platform) => _platformContainersByNumber.TryGetValue(currentNumber, out platform);

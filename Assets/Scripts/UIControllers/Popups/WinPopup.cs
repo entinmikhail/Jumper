@@ -12,6 +12,7 @@ namespace Popups
         [SerializeField] private Button _button;
         [SerializeField] private TextMeshProUGUI _textMeshPro;
 
+        [Inject] private IGameStorage _gameStorage;
         [Inject] private IGameModel _gameModel;
         
         private void Awake()
@@ -21,7 +22,7 @@ namespace Popups
 
         protected override void OnOpen()
         {
-            _textMeshPro.text = $"$ {Math.Round(_gameModel.BetAmount * _gameModel.CurrentCoefficient, 2)}";
+            _textMeshPro.text = $"$ {Math.Round(_gameStorage.BetAmount * _gameStorage.CurrentCoefficient, 2)}";
         } 
 
         private void OnButton()

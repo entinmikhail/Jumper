@@ -82,7 +82,7 @@ namespace Character
                 if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var platform))
                 {
                     Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
-                    return;
+                    GenerateUndignifiedPlatform();
                 }
 
                 _coroutineRunner.StartAfterDelay(_animationDurationConfig.IdleDelayAnimationTime, () =>
@@ -106,8 +106,7 @@ namespace Character
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
-                _currentCharacterPlatformNumber--;
-                return;
+                GenerateUndignifiedPlatform();
             }
             
             _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
@@ -135,8 +134,8 @@ namespace Character
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
-                _currentCharacterPlatformNumber--;
-                return;
+
+                GenerateUndignifiedPlatform();
             }
             
             _characterController.PlayJump();
@@ -150,14 +149,26 @@ namespace Character
             });
         }
 
+        private void GenerateUndignifiedPlatform()
+        {
+            for (int i = 1; i < _currentCharacterPlatformNumber + 2; i++)
+            {
+                if (_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var p))
+                    continue;
+
+                _platformService.TryAddPlatformObjectByData(i);
+            }
+        }
+
         public void MoveToNextPlatform(float time)
         {
             _currentCharacterPlatformNumber++;
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
-                _currentCharacterPlatformNumber--;
-                return;
+                
+                GenerateUndignifiedPlatform();
+
             }
 
             _characterController.PlayJump();

@@ -16,6 +16,8 @@ namespace UIControllers
         [SerializeField] private UIBetPanel _uiBetPanel;
         [SerializeField] private TextMeshProUGUI _cashOutText;
 
+        [Inject] private IGameStorage _gameStorage;
+        [Inject] private IGameController _gameController;
         [Inject] private IGameModel _gameModel;
         [Inject] private ICharacterMover _characterMover;
         [Inject] private ICoroutineRunner _coroutineRunner;
@@ -33,12 +35,12 @@ namespace UIControllers
 
         private void OnMoveEnd()
         {
-            _cashOutText.text = $"$ {Math.Round(_gameModel.BetAmount * _gameModel.CurrentCoefficient, 2)}";
+            _cashOutText.text = $"$ {Math.Round(_gameStorage.BetAmount * _gameStorage.CurrentCoefficient, 2)}";
         }
 
         private void OnBonusJump()
         {
-            _gameModel.BuyBonusJump();
+            _gameController.ActivateBonusJump();
             _bonusBuyButton.interactable = false;
         }
 
@@ -57,12 +59,12 @@ namespace UIControllers
                 _bonusBuyButton.interactable = true;
             }
             
-            _uiBetPanel.CurrentBet = _gameModel.BetAmount;
+            _uiBetPanel.CurrentBet = _gameStorage.BetAmount;
         }
 
         private void OnCashOut()
         {
-            _gameModel.CashOut();
+            _gameController.Cashout();
         }
 
         private void OnJump()
@@ -73,9 +75,13 @@ namespace UIControllers
                 return;
             }
             
-            _gameModel.BetAmount = _uiBetPanel.CurrentBet;
-            _gameModel.Jump();
-            
+            _gameStorage.BetAmount = _uiBetPanel.CurrentBet;
+
+            if (_gameModel.GameState == GameState.PrepareGameState)
+                _gameController.FirstJump(_uiBetPanel.CurrentBet);
+            else
+                _gameController.Jump();
+
             _jumpButton.interactable = false;
 
             _coroutineRunner.StartAfterDelay(2f, () =>

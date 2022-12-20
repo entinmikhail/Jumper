@@ -7,13 +7,13 @@ using Zenject;
 
 namespace GameModels.StateMachine
 {
-    public interface IStartGameState : IState
+    public interface IMainGameState : IState
     {
     }
 
-    public class StartGameState : IStartGameState
+    public class MainGameState : IMainGameState
     {
-        [Inject] private IGameModel _gameModel;
+        [Inject] private IGameHandler _jumpInvoker;
         [Inject] private IPopupService _popupService;
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IPlatformService _platformService;
@@ -21,40 +21,45 @@ namespace GameModels.StateMachine
 
         public void Enter()
         {
-            _gameModel.Jumped += OnJumped;
-            _gameModel.BonusPiked += OnBonusPiked;
+            _jumpInvoker.Jumped += OnJumped;
         }
 
-        private void OnJumped(int index)
+        private void OnJumped(int index, string bonusType)
         {
             _platformService.TryAddPlatformObjectByData(index + 2);
             _characterMover.SetNumberPlatform(index, _animationDurationConfig.DefaultJumpAnimationTime);
-        }
+            
+            if (_platformService.TryGetPlatformContainer(index, out var platformContainer))
+            {
+                switch (bonusType)
+                {
+                    case "PLUS1":
+                        platformContainer.SetBonus(BonusType.ExtraJump);
+                        break;
+                    case "X2":
+                        platformContainer.SetBonus(BonusType.ExtraFactor);
+                        break;
+                    case null:
+                        break;
+                }
+            }
 
-        private void OnBonusPiked(int arg, BonusType bonusType)
-        {
             switch (bonusType)
             {
-                case BonusType.Non:
-                    break;
-                case BonusType.ExtraJump:
+                case "PLUS1":
                     _popupService.ShowPopup(PopupType.ExtraJumpBonusPopup);
                     break;
-                case BonusType.ExtraFactor:
+                case "X2":
                     _popupService.ShowPopup(PopupType.ExtraFactorBonusPopup);
                     break;
-                case BonusType.Unknown:
+                case null:
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(bonusType), bonusType, null);
             }
         }
 
         public void Exit()
         {
-            _gameModel.Jumped -= OnJumped;
-            _gameModel.BonusPiked -= OnBonusPiked;
-
+            _jumpInvoker.Jumped -= OnJumped;
         }
     }
 }

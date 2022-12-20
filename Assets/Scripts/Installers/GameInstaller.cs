@@ -36,7 +36,7 @@ public class GameInstaller : MonoInstaller
     private void BindStates()
     {
         Container.Bind<IPrepareGameState>().To<PrepareGameState>().AsSingle();
-        Container.Bind<IStartGameState>().To<StartGameState>().AsSingle();
+        Container.Bind<IMainGameState>().To<MainGameState>().AsSingle();
         Container.Bind<IContinueGameState>().To<ContinueGameState>().AsSingle();
         Container.Bind<IWinGameState>().To<WinGameState>().AsSingle();
         Container.Bind<ILoseGameState>().To<LoseGameState>().AsSingle();

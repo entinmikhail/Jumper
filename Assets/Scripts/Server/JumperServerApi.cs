@@ -8,35 +8,36 @@ using Zenject;
 
 namespace Server
 {
-    public interface IServerApi
+    public interface IJumperServerApi
     {
         event Action<GetStateResponse> StateGet;
         event Action<BetResponse> BetGet;
-        event Action<NewJumpResponse> JumpGet;
+        event Action<JumpResponse> JumpGet;
         event Action<CashoutResponse> CashoutGet;
         
         void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null);
         void GetState(Action callback = null , Action badCallback = null );
-        void ToBet(Action callback = null, Action badCallback = null);
+        void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null);
         void Jump(Action callback = null, Action badCallback = null);
         void Cashout(Action callback = null, Action badCallback = null);
     }
 
-    public class ServerApi : IServerApi
+    public class JumperJumperServerApi : IJumperServerApi
     {
         public event Action<GetStateResponse> StateGet;
         public event Action<BetResponse> BetGet;
-        public event Action<NewJumpResponse> JumpGet;
+        public event Action<JumpResponse> JumpGet;
         public event Action<CashoutResponse> CashoutGet;
 
         private string _authToken;
 
         [Inject] private ICoroutineRunner _coroutineRunner;
-        [Inject] private IGameModel _gameModel;
+        [Inject] private IGameHandler _gameHandler;
         
         public void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(AuthRequestCoroutine(authRequest, callback, badCallback));
         public void GetState(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(GetStateRequestCoroutine(callback, badCallback));
-        public void ToBet(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(BetRequestCoroutine(new BetRequest(1.0f, "USD", false), callback, badCallback));
+        public void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null) => 
+            _coroutineRunner.StartCoroutine(BetRequestCoroutine(betRequest, callback, badCallback));
         public void Jump(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(JumpRequestCoroutine(callback, badCallback));
         public void Cashout(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(CashoutRequestCoroutine(callback, badCallback));
 
@@ -53,18 +54,16 @@ namespace Server
             yield return request.SendWebRequest();
             
             var response = JsonUtility.FromJson<AuthResponse>(request.downloadHandler.text);
-            
+            Debug.LogError(request.downloadHandler.text);
+
             if (response.success)
             {
                 _authToken = response.result;
                 callback?.Invoke();
-                Debug.LogError("Auth success");
-
             }
             else
             {
                 badCallback?.Invoke();
-                Debug.LogError("Server false");
             }
         }
 
@@ -82,17 +81,15 @@ namespace Server
             
             if (response.success)
             {
-                _gameModel.Initialize(response);
-                
+                Debug.LogError(request.downloadHandler.text);
+                _gameHandler.InitializeHandle(request.downloadHandler.text == "{}" ? null : response);
+
                 StateGet?.Invoke(response);
                 callback?.Invoke();
-
-                Debug.LogError("State get");
             }
             else
             {
                 badCallback?.Invoke();
-                Debug.LogError("Server false");
             }
         }
         
@@ -109,18 +106,35 @@ namespace Server
             request.SetRequestHeader("Authorization", "Bearer " + _authToken);
             
             yield return request.SendWebRequest();
-            
-            var response = JsonUtility.FromJson<BetResponse>(request.downloadHandler.text);
-            response.success = request.downloadHandler.isDone;
 
-            if (response.success)
+            if (betRequest.isWithBonus)
             {
-                BetGet?.Invoke(response);
-                callback?.Invoke();
+                var response = JsonUtility.FromJson<BonusBetResponse>(request.downloadHandler.text);
+                response.success = request.downloadHandler.isDone;
+                Debug.LogError(request.downloadHandler.text);
+
+                if (response.success)
+                {
+                    _gameHandler.BonusBetHandle(response);
+                    callback?.Invoke();
+                }
+                else
+                    badCallback?.Invoke();
             }
             else
             {
-                badCallback?.Invoke();
+                var response = JsonUtility.FromJson<BetResponse>(request.downloadHandler.text);
+                response.success = request.downloadHandler.isDone;
+                Debug.LogError(request.downloadHandler.text);
+
+                if (response.success)
+                {
+                    BetGet?.Invoke(response);
+                    _gameHandler.BetHandle(response);
+                    callback?.Invoke();
+                }
+                else
+                    badCallback?.Invoke();
             }
         }
         
@@ -131,21 +145,21 @@ namespace Server
             using var request = UnityWebRequest.Post(url, from);
             request.SetRequestHeader("Authorization", "Bearer " + _authToken);
             
-            
             yield return request.SendWebRequest();
             
-            var response = JsonUtility.FromJson<NewJumpResponse>(request.downloadHandler.text);
+            var response = JsonUtility.FromJson<JumpResponse>(request.downloadHandler.text);
             response.success = request.downloadHandler.isDone;
+            Debug.LogError(request.downloadHandler.text);
 
             if (response.success)
             {
                 callback?.Invoke();
+                _gameHandler.JumpHandle(response);
                 JumpGet?.Invoke(response);
             }
             else
             {
                 badCallback?.Invoke();
-                Debug.LogError("Server false");
             }
         }
         private IEnumerator CashoutRequestCoroutine(Action callback, Action badCallback)
@@ -159,16 +173,17 @@ namespace Server
             
             var response = JsonUtility.FromJson<CashoutResponse>(request.downloadHandler.text);
             response.success = request.downloadHandler.isDone;
+            Debug.LogError(request.downloadHandler.text);
 
             if (response.success)
             {
                 callback?.Invoke();
+                _gameHandler.CashOutHandle(response);
                 CashoutGet?.Invoke(response);
             }
             else
             {
                 badCallback?.Invoke();
-                Debug.LogError("Server false");
             }
         }
     }

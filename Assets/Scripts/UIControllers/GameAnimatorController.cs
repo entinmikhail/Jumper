@@ -7,7 +7,7 @@ namespace UIControllers
     {
         void PlayBonusJump();
         void PlayIdle();
-        void StartRotationAnimation(float totalFactor, float maxFactor, float animationTime);
+        void StartRotationAnimation(float totalFactor, float maxFactor, float animationTime, float prevFactor);
         void ResetAnimations();
     }
 
@@ -20,9 +20,9 @@ namespace UIControllers
         private static readonly int Idle = Animator.StringToHash("Idle");
 
 
-        public void StartRotationAnimation(float totalFactor, float maxFactor, float animationTime)
+        public void StartRotationAnimation(float totalFactor, float maxFactor, float animationTime, float prevFactor)
         {
-            _bonusPointerRotator.SetData(totalFactor, maxFactor, animationTime);
+            _bonusPointerRotator.SetData(totalFactor, maxFactor, animationTime, prevFactor);
         }
 
         public void ResetAnimations()

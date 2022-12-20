@@ -4,6 +4,7 @@ using GameModels;
 using GameModels.StateMachine;
 using Platforms;
 using UIControllers;
+using UnityEngine;
 using Zenject;
 
 namespace Gameplay
@@ -20,19 +21,23 @@ namespace Gameplay
         [Inject] private IPlatformService _platformService;
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private ICharacterMover _characterMover;
-        [Inject] private IGameModel _gameModel;
+        [Inject] private IGameStorage _gameStorage;
+
 
         public void Enter()
         {
             _gameAnimatorController.PlayBonusJump();
-            
-            for (int i = 1; i < _gameModel.CurrentAltitude + 3; i++)
+
+            for (int i = 1; i < _gameStorage.CurrentAltitude + 3; i++)
                 _platformService.TryAddPlatformObjectByData(i);
             
             _coroutineRunner.StartAfterDelay(_animationDurationConfig.AwaitingBonusAnimationTime, () =>
             {
-                _characterMover.SetNumberPlatform(_gameModel.CurrentAltitude, _animationDurationConfig.BonusJumpAnimationTime);
-                _gameAnimatorController.StartRotationAnimation(10, 50, _animationDurationConfig.BonusJumpAnimationTime);
+                _characterMover.SetNumberPlatform(_gameStorage.CurrentAltitude, _animationDurationConfig.BonusJumpAnimationTime);
+                _gameAnimatorController.StartRotationAnimation(
+                    _gameStorage.CurrentCoefficient, 
+                    50, _animationDurationConfig.BonusJumpAnimationTime, 
+                    _gameStorage.PrevCoefficient);
             });
 
             _coroutineRunner.StartAfterDelay(_animationDurationConfig.BonusJumpAnimationTime
@@ -41,7 +46,7 @@ namespace Gameplay
                                              + _animationDurationConfig.WinAnimationTime, 
                 () => 
                 { 
-                    _gameLoopStateMachine.Enter<StartGameState>(); 
+                    _gameLoopStateMachine.Enter<MainGameState>(); 
                 });
         }
 

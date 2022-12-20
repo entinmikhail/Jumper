@@ -3,10 +3,10 @@
 namespace Server
 {
     [Serializable]
-    public class NewStep
+    public class Step
     {
         public int altitude;
-        public float coefficient;
+        public string coefficient;
         public string box;
     }
 }
