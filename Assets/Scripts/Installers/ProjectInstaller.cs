@@ -23,6 +23,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<IGameStateMachine>().To<GameStateMachine>().AsSingle();
         Container.Bind<IGameModel>().To<GameModel>().AsSingle();
         Container.Bind<IAccountModel>().To<AccountModel>().AsSingle();
+        Container.Bind<IServerApi>().To<ServerApi>().AsSingle();
 
         BindStates();
     }

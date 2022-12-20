@@ -10,7 +10,7 @@ namespace GameModels
 {
     public interface IGameModel
     {
-        void Initialize(InitialStateResponse initialStateResponse);
+        void Initialize(GetStateResponse initialStateResponse);
         void Jump();
         void CashOut();
         void SetGameState(GameState newGameState);
@@ -18,41 +18,41 @@ namespace GameModels
         
         event Action<GameState> GameStateChanged;
         event Action<int> Jumped;
-        event Action<int, BonusType> BonusPiked;
+        event Action<int, string> BonusPiked;
         
         float BetAmount { get; set; }
         string Currency { get; set; }
         bool IsWin { get; set; }
         bool IsWithBonus { get; set; }
-        Step LastStep { get; set; }
+        NewStep CurrentStep { get; set; }
         int CurrentAltitude { get; set; }
         float CurrentCoefficient { get; set; }
         float WinAmount { get; set; }
         GameState GameState { get; set; }
-        Dictionary<int, BonusType> BonusTypes { get; }
+        Dictionary<int, string> BonusTypes { get; }
     }
 
     public class GameModel : IGameModel
     {
         public event Action<GameState> GameStateChanged;
         public event Action<int> Jumped;
-        public event Action<int, BonusType> BonusPiked;
+        public event Action<int, string> BonusPiked;
         public GameState GameState { get; set; }
         public float BetAmount { get; set; }
         public string Currency { get; set; }
         public bool IsWin { get; set; }
         public bool IsWithBonus{ get; set; }
-        public Step LastStep { get; set; }
+        public NewStep CurrentStep { get; set; }
         public int CurrentAltitude { get; set; }
         public float CurrentCoefficient { get; set; }
         public float WinAmount { get; set; }
 
-        public Dictionary<int, BonusType> BonusTypes { get; } = new();
+        public Dictionary<int, string> BonusTypes { get; } = new();
 
         [Inject] private IServer _fakeServer;
         [Inject] private IAccountModel _accountModel;
         
-        public void Initialize(InitialStateResponse initialStateResponse)
+        public void Initialize(GetStateResponse initialStateResponse)
         {
             if (initialStateResponse == null)
             {
@@ -129,45 +129,43 @@ namespace GameModels
                 JumpToPlatform(step);
         }
 
-        private void RefreshData(InitialStateResponse initialStateResponse)
+        private void RefreshData(GetStateResponse initialStateResponse)
         {
-            BetAmount = initialStateResponse.BetAmount;
-            Currency = initialStateResponse.Currency;
-            IsWin = initialStateResponse.IsWin;
-            IsWithBonus = initialStateResponse.IsWithBonus;
+            BetAmount = initialStateResponse.betAmount;
+            Currency = initialStateResponse.currency;
+            IsWin = initialStateResponse.isWin;
+            IsWithBonus = initialStateResponse.isWithBonus;
             
-            foreach (var step in initialStateResponse.Steps)
+            foreach (var step in initialStateResponse.steps)
             {
-                CurrentCoefficient = step.Coefficient;
-                CurrentAltitude = step.Altitude;
-                LastStep = step;
+                CurrentCoefficient = step.coefficient;
+                CurrentAltitude = step.altitude;
+                CurrentStep = step;
             }
             
             // if (IsWithBonus)
             //     SetGameState(GameState.Bonus);
         }
 
-        private void JumpToPlatform(Step step)
+        private void JumpToPlatform(NewStep step)
         {
-            CurrentCoefficient = step.Coefficient;
-            CurrentAltitude = step.Altitude;
+            CurrentCoefficient = step.coefficient;
+            CurrentAltitude = step.altitude;
 
-            if (BonusTypes.ContainsKey(step.Altitude))
-                BonusTypes[step.Altitude+1] = step.Box;
+            if (BonusTypes.ContainsKey(step.altitude))
+                BonusTypes[step.altitude] = step.box;
             else
-                BonusTypes.Add(step.Altitude+1, step.Box);
+                BonusTypes.Add(step.altitude, step.box);
 
-            if (BonusTypes.TryGetValue(step.Altitude, out var bonusType))
+            if (BonusTypes.TryGetValue(step.altitude, out var bonusType))
             {
-                if (bonusType is BonusType.ExtraJump or BonusType.ExtraFactor)
+                if (bonusType is "PLUS1" or "X2")
                 {
-                    Debug.LogError(bonusType.ToString());
-                    BonusPiked?.Invoke(step.Altitude, bonusType);
+                    Debug.LogError(bonusType);
+                    BonusPiked?.Invoke(step.altitude, bonusType);
                 }
             }
             
-            LastStep = step;
-
             Jumped?.Invoke(CurrentAltitude);
         }
 
@@ -191,7 +189,7 @@ namespace GameModels
             SetGameState(GameState.Lose);
         }
 
-        private void ContinueGame(InitialStateResponse initialStateResponse)
+        private void ContinueGame(GetStateResponse initialStateResponse)
         {
             RefreshData(initialStateResponse);
             

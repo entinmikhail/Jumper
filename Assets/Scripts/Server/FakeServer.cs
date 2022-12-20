@@ -261,11 +261,4 @@ namespace Server
         public float WinAmount;
         public bool IsWin;
     }
-
-    public class Step
-    {
-        public int Altitude;
-        public float Coefficient;
-        public BonusType Box;
-    }
 }
