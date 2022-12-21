@@ -2412,7 +2412,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: e2f7556427042a04eb3ed31853aeec89, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 2127862989eb4624eb92d4927366f396, type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 21300000, guid: 011fb2e840fb61748b24f5c9473631c3, type: 3}
   m_AnimationTriggers:
@@ -3946,7 +3946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1494813550
 RectTransform:
   m_ObjectHideFlags: 0
