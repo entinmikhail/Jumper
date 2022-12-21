@@ -16,7 +16,7 @@ namespace UIControllers
         [SerializeField] private float _notificationLifeTime;
         [SerializeField] private int _maxNotification;
 
-        private Stack<Notification> _notificationStack  = new ();
+        private Queue<Notification> _notificationStack  = new ();
         
         [Inject] private ICoroutineRunner _coroutineRunner;
         
@@ -25,7 +25,7 @@ namespace UIControllers
             var notification = Instantiate(_notificationPrefab, _notificationRoot);
             notification.SetMessage(text);
             notification.gameObject.SetActive(true);
-            _notificationStack.Push(notification);
+            _notificationStack.Enqueue(notification);
 
             if (_notificationStack.Count > _maxNotification)
                 RemoveNotification();
@@ -36,7 +36,7 @@ namespace UIControllers
 
         private void RemoveNotification()
         {
-            Destroy(_notificationStack.Pop().gameObject);
+            Destroy(_notificationStack.Dequeue().gameObject);
         }
     }
 }

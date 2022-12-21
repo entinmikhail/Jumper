@@ -4,7 +4,6 @@ using GameModels;
 using GameModels.StateMachine;
 using Platforms;
 using UIControllers;
-using UnityEngine;
 using Zenject;
 
 namespace Gameplay
@@ -19,12 +18,17 @@ namespace Gameplay
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IGameStorage _gameStorage;
+        [Inject] private IGameHandler _gameHandler;
         
         public void Enter()
         {
-            _gameAnimatorController.PlayBonusJump();
+            _gameHandler.Jumped += OnJumped;
+        }
 
-            for (int i = 1; i < _gameStorage.CurrentAltitude + 3; i++)
+        private void OnJumped(int arg1, string arg2)
+        {
+            _gameAnimatorController.PlayBonusJump();
+            for (int i = 1; i < _gameStorage.CurrentAltitude + 4; i++)
                 _platformService.TryAddPlatformObjectByData(i);
             
             _coroutineRunner.StartAfterDelay(_animationDurationConfig.AwaitingBonusAnimationTime, () =>
@@ -47,6 +51,8 @@ namespace Gameplay
 
         public void Exit()
         {
+            _gameHandler.Jumped -= OnJumped;
+
             _gameAnimatorController.PlayIdle();
             _gameAnimatorController.ResetAnimations();
         }

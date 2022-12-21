@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Text;
 using GameModels;
+using UIControllers;
 using UnityEngine;
 using UnityEngine.Networking;
 using Zenject;
@@ -20,6 +21,8 @@ namespace Server
         void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null);
         void Jump(Action callback = null, Action badCallback = null);
         void Cashout(Action callback = null, Action badCallback = null);
+        
+        void Init(INotificationService notificationService);
     }
 
     public class JumperJumperServerApi : IJumperServerApi
@@ -33,7 +36,12 @@ namespace Server
 
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private IGameHandler _gameHandler;
-        
+        private INotificationService _notificationService;
+
+        public void Init(INotificationService notificationService)
+        {
+            _notificationService = notificationService;
+        }
         public void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(AuthRequestCoroutine(authRequest, callback, badCallback));
         public void GetState(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(GetStateRequestCoroutine(callback, badCallback));
         public void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null) => 
@@ -63,6 +71,8 @@ namespace Server
             }
             else
             {
+                _notificationService.ShowNotification(request.downloadHandler.text);
+
                 badCallback?.Invoke();
             }
         }
@@ -89,6 +99,8 @@ namespace Server
             }
             else
             {
+                _notificationService.ShowNotification(request.downloadHandler.text);
+
                 badCallback?.Invoke();
             }
         }
@@ -119,7 +131,10 @@ namespace Server
                     callback?.Invoke();
                 }
                 else
+                {
+                    _notificationService.ShowNotification(request.downloadHandler.text);
                     badCallback?.Invoke();
+                }
             }
             else
             {
@@ -134,7 +149,9 @@ namespace Server
                     callback?.Invoke();
                 }
                 else
-                    badCallback?.Invoke();
+                {
+                    _notificationService.ShowNotification(request.downloadHandler.text);
+                }
             }
             
             request.Dispose();
@@ -161,7 +178,8 @@ namespace Server
             }
             else
             {
-                badCallback?.Invoke();
+                _notificationService.ShowNotification(request.downloadHandler.text);
+
             }
         }
         private IEnumerator CashoutRequestCoroutine(Action callback, Action badCallback)
@@ -185,6 +203,8 @@ namespace Server
             }
             else
             {
+                _notificationService.ShowNotification(request.downloadHandler.text);
+
                 badCallback?.Invoke();
             }
         }

@@ -33,7 +33,7 @@ namespace GameModels
                 _gameModel.SetGameState(GameState.Bonus);
             
             _gameStorage.RefreshData(response);
-            
+
             Jumped?.Invoke(_gameStorage.CurrentAltitude, null);
         }
         
