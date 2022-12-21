@@ -35,8 +35,7 @@ namespace Gameplay
             {
                 _characterMover.SetNumberPlatform(_gameStorage.CurrentAltitude, _animationDurationConfig.BonusJumpAnimationTime);
                 _gameAnimatorController.StartRotationAnimation(
-                    _gameStorage.CurrentCoefficient, 
-                    50, _animationDurationConfig.BonusJumpAnimationTime, 
+                    _gameStorage.CurrentCoefficient, _animationDurationConfig.BonusJumpAnimationTime, 
                     _gameStorage.PrevCoefficient);
             });
 

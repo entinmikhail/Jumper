@@ -1,4 +1,6 @@
-﻿using GameModels;
+﻿using System;
+using System.Globalization;
+using GameModels;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -10,14 +12,21 @@ namespace UIControllers
         [SerializeField] private UIBetButton[] _buttons;
         [SerializeField] private TextMeshProUGUI _textMesh;
         
-        public float CurrentBet {get; set;}
+        public float CurrentBet {get; private set;}
 
         [Inject] private IGameModel _gameModel;
+        [Inject] private IGameStorage _gameStorage;
 
         private void Awake()
         {
             foreach (var button in _buttons)
                 button.OnClick += ChangeCurrentBetByButton;
+        }
+
+        public void SetBet(float bet)
+        {
+            CurrentBet = bet;
+            _textMesh.text = $"{CurrentBet.ToString("0.00", CultureInfo.InvariantCulture)}";
         }
 
         private void ChangeCurrentBetByButton(UIBetButton uiBetButton)
@@ -33,7 +42,9 @@ namespace UIControllers
             else
                 CurrentBet += uiBetButton.Value;
 
-            _textMesh.text = $"{CurrentBet}";
+            _gameStorage.BetAmount = CurrentBet;
+            
+            _textMesh.text = $"{CurrentBet.ToString("0.00", CultureInfo.InvariantCulture)}";
         }
     }
 }

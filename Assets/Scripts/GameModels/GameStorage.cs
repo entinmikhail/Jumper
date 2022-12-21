@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Configs;
 using Server;
 using UnityEngine;
 using Zenject;
@@ -38,6 +39,7 @@ namespace GameModels
         public float WinAmount { get; set; }
 
         [Inject] private IAccountModel _accountModel;
+        [Inject] private IGameConfigs _gameConfigs;
 
         public void RefreshData(CashoutResponse cashOutResponse)
         {
@@ -115,8 +117,7 @@ namespace GameModels
         public void SetBonusStart(bool value)
         {
             IsWithBonus = value;
-            _accountModel.ChangeBalance(-100);
-
+            _accountModel.ChangeBalance(-_gameConfigs.BonusPrice);
         }
 
         public void ResetData()

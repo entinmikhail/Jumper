@@ -1,4 +1,5 @@
 ﻿using System;
+using Configs;
 using GameModels;
 using TMPro;
 using UnityEngine;
@@ -15,7 +16,8 @@ namespace UIControllers
         [SerializeField] private Button _button;
         [SerializeField] private TextMeshProUGUI _textMesh;
 
-        [Inject] private IAccountModel _accountModel;
+        [Inject] private IGameConfigs _gameConfigs;
+        
         public event Action<UIBetButton> OnClick;
 
         public float Value => _value;
@@ -34,11 +36,11 @@ namespace UIControllers
             {
                 case ButtonType.Max:
                     _textMesh.text = $"Max";
-                    _value = _accountModel.CurrentBalance;
+                    _value = _gameConfigs.MaxBet;
                     break;
                 case ButtonType.Min:
                     _textMesh.text = $"Min";
-                    _value = 0;
+                    _value = _gameConfigs.MinBet;
                     break;
                 case ButtonType.Value:
                     _textMesh.text = $"${_value}";

@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 214684600}
   - component: {fileID: 214684599}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: Count
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2563,6 +2563,7 @@ MonoBehaviour:
   _bonusBuyButton: {fileID: 1494813551}
   _uiBetPanel: {fileID: 1173001910}
   _cashOutText: {fileID: 1396989433}
+  _bonusButtonText: {fileID: 214684599}
 --- !u!1001 &1129984567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3077,7 +3078,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 666}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 600, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1289644397
 MonoBehaviour:
@@ -6235,7 +6236,7 @@ GameObject:
   - component: {fileID: 2135896228}
   - component: {fileID: 2135896227}
   m_Layer: 5
-  m_Name: Count
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

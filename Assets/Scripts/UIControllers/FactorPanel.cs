@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using Character;
 using GameModels;
 using TMPro;
 using UnityEngine;
@@ -11,25 +13,23 @@ namespace UIControllers
         [SerializeField] private TextMeshProUGUI _textMeshPro;
         
         [Inject] private IGameStorage _gameStorage;
-        [Inject] private IGameHandler _jumpInvoker;
-        [Inject] private IGameModel _gameModel;
+        [Inject] private ICharacterMover _characterMover;
 
         private void Awake()
         {
-            _textMeshPro.text = $"X {Math.Round(_gameStorage.CurrentCoefficient, 2)}";
-            _jumpInvoker.Jumped += OnJump;
-            _gameModel.GameStateChanged += OnJump;
-        }
-        
-
-        private void OnJump(GameState obj)
-        {
-            _textMeshPro.text = $"X {Math.Round(_gameStorage.CurrentCoefficient, 2)}";
+            _characterMover.MoveEnd += OnMoveEnd;
         }
 
-        private void OnJump(int obj, string arg2)
+        public void Initialize()
         {
-            _textMeshPro.text = $"X {Math.Round(_gameStorage.CurrentCoefficient, 2)}";
+            _textMeshPro.text = $"x{_gameStorage.CurrentCoefficient.ToString("0.00", CultureInfo.InvariantCulture)}";
+        }
+
+        private void OnMoveEnd()
+        {
+            
+            _textMeshPro.text = $"x{_gameStorage.CurrentCoefficient.ToString("0.00", CultureInfo.InvariantCulture)}";
+            
         }
     }
 }

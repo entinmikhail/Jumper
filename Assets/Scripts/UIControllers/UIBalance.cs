@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Globalization;
 using GameModels;
-using Server;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -15,13 +14,14 @@ namespace UIControllers
 
         private void Awake()
         {
-            _textMesh.text = $"$ {1000}";
+            _textMesh.text = $"$ {_accountModel.CurrentBalance.ToString("0.00", CultureInfo.InvariantCulture)}";
+
             _accountModel.BalanceChanged += OnBalanceChanged;
         }
 
         private void OnBalanceChanged(float newBalance, string currency)
         {
-            _textMesh.text = $"$ {Math.Round(newBalance, 2)}";
+            _textMesh.text = $"$ {newBalance.ToString("0.00", CultureInfo.InvariantCulture)}";
         }
     }
 }

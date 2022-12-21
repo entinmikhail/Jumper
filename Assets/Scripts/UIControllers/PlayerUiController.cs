@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Globalization;
 using Character;
+using Configs;
 using GameModels;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace UIControllers
         [SerializeField] private Button _bonusBuyButton;
         [SerializeField] private UIBetPanel _uiBetPanel;
         [SerializeField] private TextMeshProUGUI _cashOutText;
+        [SerializeField] private TextMeshProUGUI _bonusButtonText;
 
         [Inject] private IGameStorage _gameStorage;
         [Inject] private IGameController _gameController;
@@ -22,20 +24,26 @@ namespace UIControllers
         [Inject] private ICharacterMover _characterMover;
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private INotificationService _notificationService;
-        
+        [Inject] private IGameConfigs _gameConfigs;
+
         private void Awake()
         {
             _jumpButton.onClick.AddListener(OnJump);
             _cashOutButton.onClick.AddListener(OnCashOut);
             _bonusBuyButton.onClick.AddListener(OnBonusJump);
-            
-            _gameModel.GameStateChanged += OnContinueGame;
+            _gameModel.GameStateChanged += OnGameStateChanged;
             _characterMover.MoveEnd += OnMoveEnd;
+        }
+
+        private void Start()
+        {
+            _bonusButtonText.text = _gameConfigs.BonusPrice.ToString("0.00", CultureInfo.InvariantCulture);
         }
 
         private void OnMoveEnd()
         {
-            _cashOutText.text = $"$ {Math.Round(_gameStorage.BetAmount * _gameStorage.CurrentCoefficient, 2)}";
+            var value = _gameStorage.BetAmount * _gameStorage.CurrentCoefficient;
+            _cashOutText.text = value.ToString("0.00", CultureInfo.InvariantCulture);
         }
 
         private void OnBonusJump()
@@ -44,7 +52,7 @@ namespace UIControllers
             _bonusBuyButton.interactable = false;
         }
 
-        private void OnContinueGame(GameState gameState)
+        private void OnGameStateChanged(GameState gameState)
         {
             if (gameState == GameState.PrepareGameState)
             {
@@ -59,7 +67,7 @@ namespace UIControllers
                 _bonusBuyButton.interactable = true;
             }
             
-            _uiBetPanel.CurrentBet = _gameStorage.BetAmount;
+            _uiBetPanel.SetBet(_gameStorage.BetAmount);
         }
 
         private void OnCashOut()
@@ -69,7 +77,7 @@ namespace UIControllers
 
         private void OnJump()
         {
-            if (_uiBetPanel.CurrentBet <= 0)
+            if (_gameStorage.BetAmount <= 0)
             {
                 _notificationService.ShowNotification("Сделайте ставку");
                 return;
@@ -78,7 +86,7 @@ namespace UIControllers
             _gameStorage.BetAmount = _uiBetPanel.CurrentBet;
 
             if (_gameModel.GameState == GameState.PrepareGameState)
-                _gameController.FirstJump(_uiBetPanel.CurrentBet);
+                _gameController.FirstJump();
             else
                 _gameController.Jump();
 

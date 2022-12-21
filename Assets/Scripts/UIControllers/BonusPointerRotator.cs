@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Globalization;
+using Configs;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace UIControllers
 {
@@ -22,6 +25,8 @@ namespace UIControllers
         private float _prevFactor;
         private float _animationTime;
 
+        [Inject] private IGameConfigs _gameConfigs;
+
         private void Awake()
         {
             _savedRotation = _pointer.transform.rotation;
@@ -34,22 +39,24 @@ namespace UIControllers
             
             var newRotateTowards= Quaternion.RotateTowards(_pointer.transform.rotation, _targetTransformRotation, _rotationSpeed * Time.deltaTime);
             _pointer.transform.rotation = newRotateTowards;
-            _curFactor += _totalFactor/ _animationTime / _prevFactor * Time.deltaTime;
+            
+            // _curFactor += _totalFactor/ _animationTime / _prevFactor * Time.deltaTime;
+            
             _text.text = $"x{Math.Round(_curFactor, 2)}";
+            _text.text = _curFactor.ToString("0.00", CultureInfo.InvariantCulture);
 
             if (_targetTransformRotation == _pointer.transform.rotation)
                 _isRotating = false;
         }
 
-        public void SetData(float totalFactor, float maxFactor, float animationTime, float prevFactor)
+        public void SetData(float totalFactor, float animationTime, float prevFactor)
         {
             _totalFactor = totalFactor;
-            _maxFactor = maxFactor;
             _prevFactor = prevFactor;
             _animationTime = animationTime;
             
-            var lerp = Mathf.InverseLerp(0, maxFactor, totalFactor);
-            float targetAngle = Mathf.Lerp(_minRotate, _maxRotate, lerp);
+            var lerp = Mathf.InverseLerp(0, _gameConfigs.MaxBonusFactor, totalFactor);
+            var targetAngle = Mathf.Lerp(_minRotate, _maxRotate, lerp);
             
             _targetTransformRotation = Quaternion.Euler(0, 0, targetAngle);
             _rotationSpeed = targetAngle / animationTime;

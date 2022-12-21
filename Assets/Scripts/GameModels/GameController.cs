@@ -6,7 +6,7 @@ namespace GameModels
     public interface IGameController
     {
         void Jump();
-        void FirstJump(float bet);
+        void FirstJump();
         void ActivateBonusJump();
         void Cashout();
     }
@@ -22,9 +22,10 @@ namespace GameModels
             _jumperServerApi.Jump();
         }
 
-        public void FirstJump(float bet)
+        public void FirstJump()
         {
-            _jumperServerApi.ToBet(new BetRequest(bet, _accountModel.CurrentCurrency, _gameStorage.IsWithBonus));
+            _jumperServerApi.ToBet(new BetRequest(_gameStorage.BetAmount, _accountModel.CurrentCurrency, _gameStorage.IsWithBonus));
+            _accountModel.ChangeBalance(-_gameStorage.BetAmount);
         }
         
         public void ActivateBonusJump()
