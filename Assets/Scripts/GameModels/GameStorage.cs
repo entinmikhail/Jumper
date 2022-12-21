@@ -106,12 +106,17 @@ namespace GameModels
         
         public void RefreshData(BonusBetResponse response)
         {
-            IsWin = true;
+            BetAmount = response.betAmount;
+            Currency = response.currency;
+            IsWin = response.isWin;
             IsWithBonus = response.isWithBonus;
-            PrevCoefficient = CurrentFactor;
-            CurrentFactor = response.betMultiplayer;
-            CurrentAltitude = response.step;
-            CurrentAltitude = response.startPoint;
+            
+            foreach (var step in response.steps)
+            {
+                PrevCoefficient = CurrentFactor;
+                CurrentFactor = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
+                CurrentAltitude = step.altitude;
+            }
         }
 
         public void SetBonusStart(bool value)

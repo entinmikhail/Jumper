@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Character;
 using Configs;
 using Platforms;
 using Popups;
-using UnityEditor.Search;
-using UnityEngine;
 using Zenject;
 
 namespace GameModels.StateMachine
