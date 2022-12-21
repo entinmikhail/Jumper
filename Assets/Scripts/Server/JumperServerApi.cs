@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Text;
+using System.Web;
 using GameModels;
 using UIControllers;
 using UnityEngine;
@@ -42,6 +43,7 @@ namespace Server
         {
             _notificationService = notificationService;
         }
+        
         public void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(AuthRequestCoroutine(authRequest, callback, badCallback));
         public void GetState(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(GetStateRequestCoroutine(callback, badCallback));
         public void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null) => 
@@ -49,14 +51,28 @@ namespace Server
         public void Jump(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(JumpRequestCoroutine(callback, badCallback));
         public void Cashout(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(CashoutRequestCoroutine(callback, badCallback));
 
-
+        
         private IEnumerator AuthRequestCoroutine(AuthRequest authRequest, Action callback, Action badCallback)
         {
+            Uri appUrl = null;
+#if UNITY_WEBGL && !UNITY_EDITOR
+             appUrl = new Uri(Application.absoluteURL);
+#endif
+             // appUrl = new Uri(Application.absoluteURL);
+
+#if UNITY_EDITOR
+            appUrl  = new Uri("http://localhost/UnityBuilds/Jumper?operatorId=3bdda719-8b47-4e19-9282-4ea1df4b1da5&authToken=be67dc74323f3f1142f6152aa3ff0d32&currency=USD");
+#endif
+            string operatorId = HttpUtility.ParseQueryString(appUrl.Query).Get("operatorId");
+            string authToken = HttpUtility.ParseQueryString(appUrl.Query).Get("authToken");
+            string currency = HttpUtility.ParseQueryString(appUrl.Query).Get("currency");
+            string lang = HttpUtility.ParseQueryString(appUrl.Query).Get("lang");
+            
             var from = new WWWForm();
             var url = "https://api-dev.inout.games/api/auth";
-            from.AddField("operator", authRequest.@operator);
-            from.AddField("auth_token", authRequest.authToken);
-            from.AddField("currency", authRequest.currency);
+            from.AddField("operator", operatorId);
+            from.AddField("auth_token", authToken);
+            from.AddField("currency", currency);
             using var request = UnityWebRequest.Post(url, from);
             
             yield return request.SendWebRequest();
@@ -71,7 +87,7 @@ namespace Server
             }
             else
             {
-                _notificationService.ShowNotification(request.downloadHandler.text);
+                // _notificationService.ShowNotification(request.downloadHandler.text);
 
                 badCallback?.Invoke();
             }
