@@ -83,6 +83,8 @@ namespace Character
                 {
                     Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
                     GenerateUndignifiedPlatform();
+                    _platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out platform);
+
                 }
 
                 _coroutineRunner.StartAfterDelay(_animationDurationConfig.IdleDelayAnimationTime, () =>
@@ -107,6 +109,8 @@ namespace Character
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
                 GenerateUndignifiedPlatform();
+                _platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out nextPlatformContainer);
+
             }
             
             _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
@@ -136,6 +140,8 @@ namespace Character
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
 
                 GenerateUndignifiedPlatform();
+                
+                _platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out nextPlatformContainer);
             }
             
             _characterController.PlayJump();
@@ -168,6 +174,7 @@ namespace Character
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
                 
                 GenerateUndignifiedPlatform();
+                _platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out nextPlatformContainer);
 
             }
 

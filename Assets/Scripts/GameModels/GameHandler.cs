@@ -54,7 +54,6 @@ namespace GameModels
 
             if (jumpResponse.steps != null)
             {
-                Debug.LogError("jumpResponse.steps != null");
                 foreach (var step in jumpResponse.steps)
                     JumpToPlatform(step);
             }
@@ -92,8 +91,8 @@ namespace GameModels
 
         private void JumpToPlatform(Step step)
         {
-            _gameStorage.PrevCoefficient = _gameStorage.CurrentCoefficient;
-            _gameStorage.CurrentCoefficient = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
+            _gameStorage.PrevCoefficient = _gameStorage.CurrentFactor;
+            _gameStorage.CurrentFactor = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
             _gameStorage.CurrentAltitude = step.altitude;
             
             Jumped?.Invoke(_gameStorage.CurrentAltitude, step.box);

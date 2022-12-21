@@ -1693,7 +1693,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!224 &887076909
 RectTransform:
@@ -2558,10 +2558,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1526922838ed474c8c7a7fa9c1eeb864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _factorPanel: {fileID: 1289644399}
+  _uiBetPanel: {fileID: 1173001910}
   _jumpButton: {fileID: 274856368}
   _cashOutButton: {fileID: 1097854689}
   _bonusBuyButton: {fileID: 1494813551}
-  _uiBetPanel: {fileID: 1173001910}
   _cashOutText: {fileID: 1396989433}
   _bonusButtonText: {fileID: 214684599}
 --- !u!1001 &1129984567
@@ -4403,7 +4404,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _platformPrefab: {fileID: 459494277}
   _platformSpawnRoot: {fileID: 1147911121}
-  _platformOffset: {x: 0, y: 4}
+  _platformOffset: {x: 0, y: 5}
 --- !u!1001 &1609941946
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5802,6 +5803,7 @@ MonoBehaviour:
   _popupService: {fileID: 1659639261}
   _gameAnimatorController: {fileID: 38189145}
   _notificationService: {fileID: 329962954}
+  _playerUiController: {fileID: 1113970288}
 --- !u!114 &1922091911
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Globalization;
 using GameModels;
 using TMPro;
 using UnityEngine;
@@ -22,7 +22,7 @@ namespace Popups
 
         protected override void OnOpen()
         {
-            _textMeshPro.text = $"$ {Math.Round(_gameStorage.BetAmount * _gameStorage.CurrentCoefficient, 2)}";
+            _textMeshPro.text = $"$ {(_gameStorage.BetAmount * _gameStorage.CurrentFactor).ToString("0.00", CultureInfo.InvariantCulture)}";
         } 
 
         private void OnButton()

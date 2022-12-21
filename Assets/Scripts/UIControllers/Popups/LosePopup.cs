@@ -1,4 +1,5 @@
 ﻿using GameModels;
+using UIControllers;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -10,8 +11,11 @@ namespace Popups
         [SerializeField] private Button _button;
 
         [Inject] private IGameModel _gameModel;
+        [Inject] private IUiBus _uiBus;
+        
         private void Awake()
         {
+            _uiBus.SetActiveFactor(false);
             _button.onClick.AddListener(OnButton);
         }
 
@@ -19,6 +23,7 @@ namespace Popups
         {
             gameObject.SetActive(false);
             _gameModel.SetGameState(GameState.PrepareGameState);
+            _uiBus.SetActiveFactor(true);
         }
     }
 }

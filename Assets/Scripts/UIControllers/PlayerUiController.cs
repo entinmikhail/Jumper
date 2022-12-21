@@ -9,12 +9,20 @@ using Zenject;
 
 namespace UIControllers
 {
-    public class PlayerUiController : MonoBehaviour
+    public interface IUiBus
     {
+        void SetActiveFactor(bool value);
+    }
+
+    public class PlayerUiController : MonoBehaviour, IUiBus
+    {
+        [SerializeField] private FactorPanel _factorPanel;
+        [SerializeField] private UIBetPanel _uiBetPanel;
+        [Space]
         [SerializeField] private Button _jumpButton;
         [SerializeField] private Button _cashOutButton;
         [SerializeField] private Button _bonusBuyButton;
-        [SerializeField] private UIBetPanel _uiBetPanel;
+        [Space]
         [SerializeField] private TextMeshProUGUI _cashOutText;
         [SerializeField] private TextMeshProUGUI _bonusButtonText;
 
@@ -35,15 +43,20 @@ namespace UIControllers
             _characterMover.MoveEnd += OnMoveEnd;
         }
 
-        private void Start()
-        {
-            _bonusButtonText.text = _gameConfigs.BonusPrice.ToString("0.00", CultureInfo.InvariantCulture);
-        }
-
         private void OnMoveEnd()
         {
-            var value = _gameStorage.BetAmount * _gameStorage.CurrentCoefficient;
-            _cashOutText.text = value.ToString("0.00", CultureInfo.InvariantCulture);
+            RefreshCashText();
+        }
+
+        public void SetActiveFactor(bool value)
+        {
+            _factorPanel.gameObject.SetActive(value);
+        }
+
+        private void RefreshCashText()
+        {
+            _cashOutText.text =
+                (_gameStorage.BetAmount * _gameStorage.CurrentFactor).ToString("0.00", CultureInfo.InvariantCulture);
         }
 
         private void OnBonusJump()
@@ -66,7 +79,13 @@ namespace UIControllers
                 _bonusBuyButton.gameObject.SetActive(false);
                 _bonusBuyButton.interactable = true;
             }
+
+            if (gameState == GameState.Lose)
+                return;
             
+            _bonusButtonText.text = _gameConfigs.BonusPrice.ToString("0.00", CultureInfo.InvariantCulture);
+            RefreshCashText();
+            _factorPanel.Refresh();
             _uiBetPanel.SetBet(_gameStorage.BetAmount);
         }
 

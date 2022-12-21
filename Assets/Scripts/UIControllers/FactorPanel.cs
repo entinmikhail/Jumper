@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Character;
 using GameModels;
 using TMPro;
@@ -13,6 +12,7 @@ namespace UIControllers
         [SerializeField] private TextMeshProUGUI _textMeshPro;
         
         [Inject] private IGameStorage _gameStorage;
+        [Inject] private IGameModel _gameModel;
         [Inject] private ICharacterMover _characterMover;
 
         private void Awake()
@@ -20,16 +20,17 @@ namespace UIControllers
             _characterMover.MoveEnd += OnMoveEnd;
         }
 
-        public void Initialize()
-        {
-            _textMeshPro.text = $"x{_gameStorage.CurrentCoefficient.ToString("0.00", CultureInfo.InvariantCulture)}";
-        }
-
         private void OnMoveEnd()
         {
+            if (_gameModel.GameState == GameState.Lose)
+                return;
             
-            _textMeshPro.text = $"x{_gameStorage.CurrentCoefficient.ToString("0.00", CultureInfo.InvariantCulture)}";
-            
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            _textMeshPro.text = $"x{_gameStorage.CurrentFactor.ToString("0.00", CultureInfo.InvariantCulture)}";
         }
     }
 }

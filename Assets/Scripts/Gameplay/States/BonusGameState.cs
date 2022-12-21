@@ -9,10 +9,7 @@ using Zenject;
 
 namespace Gameplay
 {
-    public interface IBonusGameState : IState
-    {
-    }
-
+    public interface IBonusGameState : IState { }
     public class BonusGameState : IBonusGameState
     {
         [Inject] private IAnimationDurationConfig _animationDurationConfig;
@@ -22,8 +19,7 @@ namespace Gameplay
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IGameStorage _gameStorage;
-
-
+        
         public void Enter()
         {
             _gameAnimatorController.PlayBonusJump();
@@ -35,7 +31,7 @@ namespace Gameplay
             {
                 _characterMover.SetNumberPlatform(_gameStorage.CurrentAltitude, _animationDurationConfig.BonusJumpAnimationTime);
                 _gameAnimatorController.StartRotationAnimation(
-                    _gameStorage.CurrentCoefficient, _animationDurationConfig.BonusJumpAnimationTime, 
+                    _gameStorage.CurrentFactor, _animationDurationConfig.BonusJumpAnimationTime, 
                     _gameStorage.PrevCoefficient);
             });
 

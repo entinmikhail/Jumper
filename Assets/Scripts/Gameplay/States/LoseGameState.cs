@@ -12,7 +12,6 @@ namespace Gameplay
 
     public class LoseGameState : ILoseGameState
     {
-        [Inject] private IPlatformService _platformService;
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IAnimationDurationConfig _animationDurationConfig;
 
@@ -23,7 +22,6 @@ namespace Gameplay
 
         public void Exit()
         {
-            _platformService.ResetPlatformsData();
         }
     }
 }

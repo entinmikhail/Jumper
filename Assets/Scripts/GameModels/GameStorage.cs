@@ -14,7 +14,7 @@ namespace GameModels
         bool IsWin { get; set; }
         bool IsWithBonus { get; set; }
         int CurrentAltitude { get; set; }
-        float CurrentCoefficient{ get; set; }
+        float CurrentFactor{ get; set; }
         float WinAmount { get; set; }
         float PrevCoefficient { get; set; }
         
@@ -34,7 +34,7 @@ namespace GameModels
         public bool IsWin { get; set; }
         public bool IsWithBonus { get; set; }
         public int CurrentAltitude { get; set; }
-        public float CurrentCoefficient  { get; set; }
+        public float CurrentFactor  { get; set; }
         public float PrevCoefficient { get; set; } = 1;
         public float WinAmount { get; set; }
 
@@ -82,8 +82,8 @@ namespace GameModels
             }
             foreach (var step in initialStateResponse.steps)
             {
-                PrevCoefficient = CurrentCoefficient;
-                CurrentCoefficient = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
+                PrevCoefficient = CurrentFactor;
+                CurrentFactor = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
                 CurrentAltitude = step.altitude;
             }
             _accountModel.ChangeBalance(-BetAmount);
@@ -98,8 +98,8 @@ namespace GameModels
             
             foreach (var step in initialStateResponse.steps)
             {
-                PrevCoefficient = CurrentCoefficient;
-                CurrentCoefficient = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
+                PrevCoefficient = CurrentFactor;
+                CurrentFactor = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
                 CurrentAltitude = step.altitude;
             }
         } 
@@ -108,8 +108,8 @@ namespace GameModels
         {
             IsWin = true;
             IsWithBonus = response.isWithBonus;
-            PrevCoefficient = CurrentCoefficient;
-            CurrentCoefficient = response.betMultiplayer;
+            PrevCoefficient = CurrentFactor;
+            CurrentFactor = response.betMultiplayer;
             CurrentAltitude = response.step;
             CurrentAltitude = response.startPoint;
         }
@@ -123,8 +123,8 @@ namespace GameModels
         public void ResetData()
         {
             CurrentAltitude = 0;
-            PrevCoefficient = CurrentCoefficient;
-            CurrentCoefficient = 0;
+            PrevCoefficient = CurrentFactor;
+            CurrentFactor = _gameConfigs.DefaultFactor;
             IsWithBonus = false;
         }
     }

@@ -16,6 +16,7 @@ public class GameInstaller : MonoInstaller
     [SerializeField] private PopupService _popupService;
     [SerializeField] private GameAnimatorController _gameAnimatorController;
     [SerializeField] private NotificationService _notificationService;
+    [SerializeField] private PlayerUiController _playerUiController;
 
     public override void InstallBindings()
     {
@@ -24,6 +25,7 @@ public class GameInstaller : MonoInstaller
         Container.Bind<IPopupService>().FromInstance(_popupService).AsSingle();
         Container.Bind<IGameAnimatorController>().FromInstance(_gameAnimatorController).AsSingle();
         Container.Bind<INotificationService>().FromInstance(_notificationService).AsSingle();
+        Container.Bind<IUiBus>().FromInstance(_playerUiController).AsSingle();
         
         Container.Bind<IPlatformService>().To<PlatformService>().AsSingle();
         Container.Bind<IGameStateController>().To<GameStateController>().AsSingle();

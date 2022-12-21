@@ -54,7 +54,7 @@ namespace Server
             yield return request.SendWebRequest();
             
             var response = JsonUtility.FromJson<AuthResponse>(request.downloadHandler.text);
-            Debug.LogError(request.downloadHandler.text);
+            Debug.Log(request.downloadHandler.text);
 
             if (response.success)
             {
@@ -81,7 +81,7 @@ namespace Server
             
             if (response.success)
             {
-                Debug.LogError(request.downloadHandler.text);
+                Debug.Log(request.downloadHandler.text);
                 _gameHandler.InitializeHandle(request.downloadHandler.text == "{}" ? null : response);
 
                 StateGet?.Invoke(response);
@@ -106,12 +106,12 @@ namespace Server
             request.SetRequestHeader("Authorization", "Bearer " + _authToken);
             
             yield return request.SendWebRequest();
-
+            
             if (betRequest.isWithBonus)
             {
                 var response = JsonUtility.FromJson<BonusBetResponse>(request.downloadHandler.text);
                 response.success = request.downloadHandler.isDone;
-                Debug.LogError(request.downloadHandler.text);
+                Debug.Log(request.downloadHandler.text);
 
                 if (response.success)
                 {
@@ -125,7 +125,7 @@ namespace Server
             {
                 var response = JsonUtility.FromJson<BetResponse>(request.downloadHandler.text);
                 response.success = request.downloadHandler.isDone;
-                Debug.LogError(request.downloadHandler.text);
+                Debug.Log(request.downloadHandler.text);
 
                 if (response.success)
                 {
@@ -136,6 +136,8 @@ namespace Server
                 else
                     badCallback?.Invoke();
             }
+            
+            request.Dispose();
         }
         
         private IEnumerator JumpRequestCoroutine(Action callback, Action badCallback)
@@ -149,7 +151,7 @@ namespace Server
             
             var response = JsonUtility.FromJson<JumpResponse>(request.downloadHandler.text);
             response.success = request.downloadHandler.isDone;
-            Debug.LogError(request.downloadHandler.text);
+            Debug.Log(request.downloadHandler.text);
 
             if (response.success)
             {
@@ -173,7 +175,7 @@ namespace Server
             
             var response = JsonUtility.FromJson<CashoutResponse>(request.downloadHandler.text);
             response.success = request.downloadHandler.isDone;
-            Debug.LogError(request.downloadHandler.text);
+            Debug.Log(request.downloadHandler.text);
 
             if (response.success)
             {

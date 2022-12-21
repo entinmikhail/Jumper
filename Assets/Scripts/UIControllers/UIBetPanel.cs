@@ -16,6 +16,7 @@ namespace UIControllers
 
         [Inject] private IGameModel _gameModel;
         [Inject] private IGameStorage _gameStorage;
+        [Inject] private INotificationService _notificationService;
 
         private void Awake()
         {
@@ -33,7 +34,7 @@ namespace UIControllers
         {
             if (_gameModel.GameState != GameState.PrepareGameState)
             {
-                Debug.LogError("GameState != GameState.PrepareGameState");
+                _notificationService.ShowNotification("Ставка уже сделана");
                 return;
             }
             
