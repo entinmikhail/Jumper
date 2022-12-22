@@ -1,4 +1,5 @@
 ﻿using System;
+using Cinemachine;
 using Configs;
 using GameModels;
 using Platforms;
@@ -26,6 +27,7 @@ namespace Character
     public class CharacterMover : MonoBehaviour, ICharacterMover
     {
         [SerializeField] private CharacterController _characterController;
+        [SerializeField] private CinemachineBrain _cinemachineBrain;
         [SerializeField] private Transform _characterSpawnRoot;
 
         public event Action PlatformBroke;
@@ -106,6 +108,8 @@ namespace Character
         public void SetNumberPlatformWithoutAnimation(int numberPlatform)
         {
             _currentCharacterPlatformNumber = numberPlatform;
+            // _cinemachineBrain.enabled = false;
+            //
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
@@ -115,6 +119,14 @@ namespace Character
             }
             
             _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
+            // _cinemachineBrain.gameObject.transform.position =
+            //     new Vector3(
+            //         _cinemachineBrain.gameObject.transform.position.y - _characterSpawnRoot.position.y +
+            //         _characterController.gameObject.transform.position.y,
+            //         0, 0);
+            
+            // _cinemachineBrain.enabled = true;
+
         }
         
 

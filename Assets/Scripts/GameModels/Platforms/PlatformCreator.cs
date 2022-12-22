@@ -18,7 +18,7 @@ namespace Platforms
         {
             var platform = Instantiate(_platformPrefab, _platformSpawnRoot.position, Quaternion.identity);
             var platformTransform = platform.transform;
-            var posX = currentNumber % 2 == 1 ? _platformOffset.y : -platformTransform.position.y;
+            var posX = currentNumber % 2 == 1 ? _platformOffset.y : -_platformOffset.y;
             platformTransform.position = new Vector3(posX, _platformOffset.y * currentNumber);
             platform.gameObject.name = $"Platform - {currentNumber}";
             platform.gameObject.SetActive(true);

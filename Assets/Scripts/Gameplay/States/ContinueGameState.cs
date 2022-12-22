@@ -29,7 +29,10 @@ namespace GameModels.StateMachine
             _characterMover.SetIdle(); 
             _characterMover.RotateCharacter(); 
             _gameLoopStateMachine.Enter<MainGameState>();
-            _loadingCurtainsViewer.Disable();
+            _coroutineRunner.StartAfterDelay(1, () =>
+            {
+                _loadingCurtainsViewer.Disable();
+            });
         }
 
         public void Exit()
