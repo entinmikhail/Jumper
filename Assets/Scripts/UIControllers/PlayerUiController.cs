@@ -62,12 +62,7 @@ namespace UIControllers
         private void OnBonusJump()
         {
             _gameController.ActivateBonusJump();
-            _bonusBuyButton.interactable = false;
-            
-            _coroutineRunner.StartAfterDelay(2f, () =>
-            {
-                _bonusBuyButton.interactable = true;
-            });
+            OnJump();
         }
 
         private void OnGameStateChanged(GameState gameState)
@@ -76,13 +71,11 @@ namespace UIControllers
             {
                 _cashOutButton.gameObject.SetActive(false);
                 _bonusBuyButton.gameObject.SetActive(true);
-                _cashOutButton.interactable = true;
             }
             else
             {
                 _cashOutButton.gameObject.SetActive(true);
                 _bonusBuyButton.gameObject.SetActive(false);
-                _bonusBuyButton.interactable = true;
             }
 
             if (gameState == GameState.Lose)
@@ -97,12 +90,6 @@ namespace UIControllers
         private void OnCashOut()
         {
             _gameController.Cashout();
-            _cashOutButton.interactable = false;
-
-            _coroutineRunner.StartAfterDelay(2f, () =>
-            {
-                _cashOutButton.interactable = true;
-            });
         }
 
         private void OnJump()
@@ -119,13 +106,6 @@ namespace UIControllers
                 _gameController.FirstJump();
             else
                 _gameController.Jump();
-
-            _jumpButton.interactable = false;
-
-            _coroutineRunner.StartAfterDelay(2f, () =>
-            {
-                _jumpButton.interactable = true;
-            });
         }
     }
 

@@ -16,7 +16,10 @@ namespace Server
         event Action<BetResponse> BetGet;
         event Action<JumpResponse> JumpGet;
         event Action<CashoutResponse> CashoutGet;
-        
+        event Action RequestSentEvent;
+        event Action ResponseReceivedEvent;
+        bool IsBusy { get; set; }
+
         void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null);
         void GetState(Action callback = null , Action badCallback = null );
         void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null);
@@ -32,18 +35,31 @@ namespace Server
         public event Action<BetResponse> BetGet;
         public event Action<JumpResponse> JumpGet;
         public event Action<CashoutResponse> CashoutGet;
+        public event Action RequestSentEvent;
+        public event Action ResponseReceivedEvent;
+        public bool IsBusy { get; set; }
 
         private string _authToken;
 
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private IGameHandler _gameHandler;
         private INotificationService _notificationService;
+        private float _waitSeconds = 2;
 
         public void Init(INotificationService notificationService)
         {
             _notificationService = notificationService;
         }
-        
+
+        public JumperJumperServerApi()
+        {
+            RequestSentEvent += () => IsBusy = true;
+            ResponseReceivedEvent += () =>
+            {
+                IsBusy = false;
+            };
+        }
+
         public void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(AuthRequestCoroutine(authRequest, callback, badCallback));
         public void GetState(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(GetStateRequestCoroutine(callback, badCallback));
         public void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null) => 
@@ -54,6 +70,7 @@ namespace Server
         
         private IEnumerator AuthRequestCoroutine(AuthRequest authRequest, Action callback, Action badCallback)
         {
+            RequestSentEvent?.Invoke();
             Uri appUrl = null;
 #if UNITY_WEBGL && !UNITY_EDITOR
              appUrl = new Uri(Application.absoluteURL);
@@ -88,13 +105,16 @@ namespace Server
             else
             {
                 // _notificationService.ShowNotification(request.downloadHandler.text);
-
                 badCallback?.Invoke();
             }
+            
+            ResponseReceivedEvent?.Invoke();
         }
 
-        private IEnumerator GetStateRequestCoroutine( Action callback, Action badCallback)
+        private IEnumerator GetStateRequestCoroutine(Action callback, Action badCallback)
         {
+            RequestSentEvent?.Invoke();
+
             var from = new WWWForm();
             var url = "https://api-dev.inout.games/games/jumper/getState";
             using var request = UnityWebRequest.Post(url, from);
@@ -119,10 +139,17 @@ namespace Server
 
                 badCallback?.Invoke();
             }
+            
+            _coroutineRunner.StartAfterDelay(_waitSeconds, () =>
+            {
+                ResponseReceivedEvent?.Invoke();
+            });
         }
         
         private IEnumerator BetRequestCoroutine(BetRequest betRequest, Action callback, Action badCallback)
         {
+            RequestSentEvent?.Invoke();
+
             var url = "https://api-dev.inout.games/games/jumper/bet";
             var request = new UnityWebRequest(url, "POST");
             var bodyJsonString = JsonUtility.ToJson(betRequest);
@@ -171,10 +198,17 @@ namespace Server
             }
             
             request.Dispose();
+            
+            _coroutineRunner.StartAfterDelay(_waitSeconds, () =>
+            {
+                ResponseReceivedEvent?.Invoke();
+            });
         }
         
         private IEnumerator JumpRequestCoroutine(Action callback, Action badCallback)
         {
+            RequestSentEvent?.Invoke();
+
             var from = new WWWForm();
             var url = "https://api-dev.inout.games/games/jumper/nextStep";
             using var request = UnityWebRequest.Post(url, from);
@@ -195,11 +229,17 @@ namespace Server
             else
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
-
             }
+            
+            _coroutineRunner.StartAfterDelay(_waitSeconds, () =>
+            {
+                ResponseReceivedEvent?.Invoke();
+            });
         }
         private IEnumerator CashoutRequestCoroutine(Action callback, Action badCallback)
         {
+            RequestSentEvent?.Invoke();
+
             var from = new WWWForm();
             var url = "https://api-dev.inout.games/games/jumper/cashout";
             using var request = UnityWebRequest.Post(url, from);
@@ -223,6 +263,11 @@ namespace Server
 
                 badCallback?.Invoke();
             }
+
+            _coroutineRunner.StartAfterDelay(_waitSeconds, () =>
+            {
+                ResponseReceivedEvent?.Invoke();
+            });
         }
     }
 }

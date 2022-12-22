@@ -20,6 +20,7 @@ namespace Character
         event Action MoveEnd;
         void SetActive(bool value);
         void RotateCharacter();
+        void RotateCharacter(int currentCharacterPlatformNumber);
     }
 
     public class CharacterMover : MonoBehaviour, ICharacterMover
@@ -192,6 +193,13 @@ namespace Character
         public void RotateCharacter()
         {
             _characterController.gameObject.transform.localScale = _currentCharacterPlatformNumber % 2 == 0
+                ? new Vector3(1, 1, 1) 
+                : new Vector3(-1, 1, 1);
+        }
+        
+        public void RotateCharacter(int currentCharacterPlatformNumber)
+        {
+            _characterController.gameObject.transform.localScale =  currentCharacterPlatformNumber% 2 == 0
                 ? new Vector3(1, 1, 1) 
                 : new Vector3(-1, 1, 1);
         }

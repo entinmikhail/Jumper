@@ -21,12 +21,10 @@ namespace UIControllers
 
         private float _totalFactor;
         private float _maxFactor;
-        private float _curFactor;
+        private float _curFactor = 1;
         private float _prevFactor;
         private float _animationTime;
-
-        [Inject] private IGameConfigs _gameConfigs;
-
+        
         private void Awake()
         {
             _savedRotation = _pointer.transform.rotation;
@@ -40,10 +38,8 @@ namespace UIControllers
             var newRotateTowards= Quaternion.RotateTowards(_pointer.transform.rotation, _targetTransformRotation, _rotationSpeed * Time.deltaTime);
             _pointer.transform.rotation = newRotateTowards;
             
-            // _curFactor += _totalFactor/ _animationTime / _prevFactor * Time.deltaTime;
-            
-            _text.text = $"x{Math.Round(_curFactor, 2)}";
-            _text.text = _curFactor.ToString("0.00", CultureInfo.InvariantCulture);
+            _curFactor += (_totalFactor - 1) / _animationTime * Time.deltaTime;
+            _text.text = $"x{_curFactor.ToString("0.00", CultureInfo.InvariantCulture)}";
 
             if (_targetTransformRotation == _pointer.transform.rotation)
                 _isRotating = false;
@@ -55,16 +51,18 @@ namespace UIControllers
             _prevFactor = prevFactor;
             _animationTime = animationTime;
             
-            var lerp = Mathf.InverseLerp(0, _gameConfigs.MaxBonusFactor, totalFactor);
+            var lerp = Mathf.InverseLerp(0, totalFactor, totalFactor);
             var targetAngle = Mathf.Lerp(_minRotate, _maxRotate, lerp);
-            
+            var path = Math.Abs(_minRotate) + Math.Abs(targetAngle);
+          
             _targetTransformRotation = Quaternion.Euler(0, 0, targetAngle);
-            _rotationSpeed = targetAngle / animationTime;
+            _rotationSpeed = path / animationTime;
             _isRotating = true;
         }
 
         public void ResetRotation()
         {
+            _curFactor = 1;
             _pointer.transform.rotation = _savedRotation;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Character;
 using Configs;
 using Platforms;
+using Services;
 using Zenject;
 
 namespace GameModels.StateMachine
@@ -12,7 +13,8 @@ namespace GameModels.StateMachine
     public class PrepareGameState : IPrepareGameState
     {
         private const int DefaultPlatformCount = 3;
-        
+
+        [Inject] private ILoadingCurtainsViewer _loadingCurtainsViewer;
         [Inject] private IPlatformService _platformService;
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IGameStorage _gameStorage;
@@ -20,6 +22,7 @@ namespace GameModels.StateMachine
 
         public void Enter()
         {
+            // _loadingCurtainsViewer.Enable();
             _characterMover.RefreshCharacter();
             _gameStorage.CurrentFactor = _gameConfigs.DefaultFactor;
         }
@@ -34,6 +37,7 @@ namespace GameModels.StateMachine
         {
             _platformService.ResetPlatformsData();
             GeneratePlatforms();
+            // _loadingCurtainsViewer.Disable();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Configs;
 using Gameplay;
 using Platforms;
+using Services;
 using Zenject;
 
 namespace GameModels.StateMachine
@@ -16,10 +17,12 @@ namespace GameModels.StateMachine
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IPlatformService _platformService;
         [Inject] private IGameLoopStateMachine _gameLoopStateMachine;
+        [Inject] private ILoadingCurtainsViewer _loadingCurtainsViewer;
 
         public void Enter()
         {
-            for (int i = 1; i < _gameStorage.CurrentAltitude + 3; i++)
+            _loadingCurtainsViewer.Enable();
+            for (int i = 1; i < _gameStorage.CurrentAltitude + 4; i++)
                 _platformService.TryAddPlatformObjectByData(i);
             
             _characterMover.SetNumberPlatformWithoutAnimation(_gameStorage.CurrentAltitude);
@@ -30,6 +33,7 @@ namespace GameModels.StateMachine
 
         public void Exit()
         {
+            _loadingCurtainsViewer.Disable();
         }
     }
 }

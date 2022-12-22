@@ -18,8 +18,9 @@ namespace GameModels.StateMachine
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IPlatformService _platformService;
         [Inject] private IAnimationDurationConfig _animationDurationConfig;
+        [Inject] private ICoroutineRunner _coroutineRunner;
 
-        private readonly Queue<int> _numberOfPlatforms = new();
+        private readonly Queue<JumpData> _numberOfPlatforms = new();
         public void Enter()
         {
             _numberOfPlatforms.Clear();
@@ -30,24 +31,60 @@ namespace GameModels.StateMachine
         private void OnMoveEnd()
         {
             if (_numberOfPlatforms.Count > 0)
-                _numberOfPlatforms.Dequeue();
+            {
+                var jumpData = _numberOfPlatforms.Dequeue();
+                _coroutineRunner.StartAfterDelay(0.5f, () =>
+                {
+                    
+                    if (_platformService.TryGetPlatformContainer(jumpData.Index, out var platformContainer))
+                    {
+                        platformContainer.OnMoveEnd();
+                    }
+                    
+                    _coroutineRunner.StartAfterDelay(0.3f, () =>
+                    {
+                        platformContainer.PlayDisable();
+                        switch (jumpData.BonusType)         
+                            // switch ("X2")
+                        {
+                            case "PLUS1":
+                                _popupService.ShowPopup(PopupType.ExtraJumpBonusPopup);
+                                break;
+                            case "X2":
+                                _popupService.ShowPopup(PopupType.ExtraFactorBonusPopup);
+                                break;
+                            case null:
+                                break;
+                        }
+                    });
+                });
+            }
             
             if (_numberOfPlatforms.Count > 0)
-                OnJumped(_numberOfPlatforms.Peek(), null);
+            {
+                _coroutineRunner.StartAfterDelay(0.5f, () =>
+                {
+                    var jumpData = _numberOfPlatforms.Peek();
+                     OnJumped(jumpData.Index, jumpData.BonusType);
+                });
+            }
         }
 
         private void OnJumped(int index, string bonusType)
         {
-            _numberOfPlatforms.Enqueue(index);
-            if (_numberOfPlatforms.Peek() != index)
+            var jumpData = new JumpData(index, bonusType);
+            
+            _numberOfPlatforms.Enqueue(jumpData);
+            if (_numberOfPlatforms.Peek() != jumpData)
                 return;
             
-            _platformService.TryAddPlatformObjectByData(index + 3);
-            _characterMover.SetNumberPlatform(index, _animationDurationConfig.DefaultJumpAnimationTime);
+            _platformService.TryAddPlatformObjectByData(jumpData.Index + 3);
+            _characterMover.SetNumberPlatform(jumpData.Index, _animationDurationConfig.DefaultJumpAnimationTime);
 
-            if (_platformService.TryGetPlatformContainer(index, out var platformContainer))
+            if (_platformService.TryGetPlatformContainer(jumpData.Index, out var platformContainer))
             {
-                switch (bonusType)
+                switch (jumpData.BonusType)
+                // switch ("X2")
                 {
                     case "PLUS1":
                         platformContainer.SetBonus(BonusType.ExtraJump);
@@ -59,18 +96,6 @@ namespace GameModels.StateMachine
                         break;
                 }
             }
-
-            switch (bonusType)
-            {
-                case "PLUS1":
-                    _popupService.ShowPopup(PopupType.ExtraJumpBonusPopup);
-                    break;
-                case "X2":
-                    _popupService.ShowPopup(PopupType.ExtraFactorBonusPopup);
-                    break;
-                case null:
-                    break;
-            }
         }
 
         public void Exit()
@@ -79,5 +104,18 @@ namespace GameModels.StateMachine
             _characterMover.MoveEnd -= OnMoveEnd;
 
         }
+
+        private class JumpData
+        {
+            public JumpData(int index, string bonusType)
+            {
+                Index = index;
+                BonusType = bonusType;
+            }
+
+            public int Index;
+            public string BonusType;
+        }
     }
+
 }

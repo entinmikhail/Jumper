@@ -4,6 +4,7 @@ using GameModels;
 using GameModels.StateMachine;
 using Platforms;
 using UIControllers;
+using UnityEngine;
 using Zenject;
 
 namespace Gameplay
@@ -30,7 +31,7 @@ namespace Gameplay
             _gameAnimatorController.PlayBonusJump();
             for (int i = 1; i < _gameStorage.CurrentAltitude + 4; i++)
                 _platformService.TryAddPlatformObjectByData(i);
-            
+            _characterMover.RotateCharacter(_gameStorage.CurrentAltitude+1);
             _coroutineRunner.StartAfterDelay(_animationDurationConfig.AwaitingBonusAnimationTime, () =>
             {
                 _characterMover.SetNumberPlatform(_gameStorage.CurrentAltitude, _animationDurationConfig.BonusJumpAnimationTime);

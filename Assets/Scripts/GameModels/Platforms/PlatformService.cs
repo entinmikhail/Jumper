@@ -30,7 +30,7 @@ namespace Platforms
 
             if (_platformContainersByNumber.TryGetValue(currentNumber, out var platformContainer))
             {
-                Debug.LogError("Platform Error");
+                Debug.LogError("Platform exist");
                 return false;
             }
                     
