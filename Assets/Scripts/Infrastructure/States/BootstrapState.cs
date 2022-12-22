@@ -1,6 +1,7 @@
 ﻿using GameModels;
 using GameModels.StateMachine;
 using Server;
+using UnityEngine;
 using Zenject;
 
 namespace Infrastructure.States
@@ -23,15 +24,15 @@ namespace Infrastructure.States
         public void Enter()
         {
             _accountModel.RefreshBalance(1000f, "USD");
-            _jumperServerApi.AuthRequest( 
-                () => _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel),
-                null);
+            _jumperServerApi.AuthRequest(() => _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel));
         }
 
         private void EnterLoadLevel()
         {
-            // _gameStateMachine.Enter<LoadLevelState, string>(Payload);
-            _gameStateMachine.Enter<LoadLevelState, string>(Horisontal);
+            Debug.LogError("Screen.width = " + Screen.width);
+            Debug.LogError("Screen.height = " + Screen.height);
+            var screenFactor = Screen.width / Screen.height;
+            _gameStateMachine.Enter<LoadLevelState, string>(screenFactor >= 1 ? Horisontal : Vertical);
         }
 
         public void Exit()

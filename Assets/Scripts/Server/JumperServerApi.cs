@@ -75,10 +75,9 @@ namespace Server
 #if UNITY_WEBGL && !UNITY_EDITOR
              appUrl = new Uri(Application.absoluteURL);
 #endif
-             // appUrl = new Uri(Application.absoluteURL);
-
+            
 #if UNITY_EDITOR
-            appUrl  = new Uri("http://localhost/UnityBuilds/Jumper?operatorId=3bdda719-8b47-4e19-9282-4ea1df4b1da5&authToken=be67dc74323f3f1142f6152aa3ff0d32&currency=USD");
+            appUrl = new Uri("http://localhost/UnityBuilds/Jumper?operatorId=3bdda719-8b47-4e19-9282-4ea1df4b1da5&authToken=be67dc74323f3f1142f6152aa3ff0d32&currency=USD");
 #endif
             string operatorId = HttpUtility.ParseQueryString(appUrl.Query).Get("operatorId");
             string authToken = HttpUtility.ParseQueryString(appUrl.Query).Get("authToken");
