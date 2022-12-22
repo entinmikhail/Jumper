@@ -67,24 +67,23 @@ namespace UIControllers
 
         private void OnGameStateChanged(GameState gameState)
         {
-            if (gameState == GameState.PrepareGameState)
-            {
-                _cashOutButton.gameObject.SetActive(false);
-                _bonusBuyButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                _cashOutButton.gameObject.SetActive(true);
-                _bonusBuyButton.gameObject.SetActive(false);
-            }
+            _cashOutButton.gameObject.SetActive(true);
+            _bonusBuyButton.gameObject.SetActive(false);
 
-            if (gameState == GameState.Lose)
+            if (gameState == GameState.Lose) 
                 return;
             
             _bonusButtonText.text = _gameConfigs.BonusPrice.ToString("0.00", CultureInfo.InvariantCulture);
             RefreshCashText();
             _factorPanel.Refresh();
             _uiBetPanel.SetBet(_gameStorage.BetAmount);
+
+            if (gameState != GameState.PrepareGameState)
+                return;
+            
+            _cashOutButton.gameObject.SetActive(false);
+            _bonusBuyButton.gameObject.SetActive(true);
+            _factorPanel.SetFactor(_gameConfigs.DefaultFactor);
         }
 
         private void OnCashOut()

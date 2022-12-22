@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using Zenject;
 
 namespace GameModels
@@ -13,10 +14,7 @@ namespace GameModels
     public class GameModel : IGameModel
     {
         public event Action<GameState> GameStateChanged;
-        public GameState GameState { get; set; }
-        
-        [Inject] private IAccountModel _accountModel;
-
+        public GameState GameState { get; set; } = GameState.LoadingState;
         
         public void SetGameState(GameState newGameState)
         {

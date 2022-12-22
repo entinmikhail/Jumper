@@ -12,7 +12,8 @@ namespace Infrastructure.States
     public class BootstrapState : IBootstrapState
     {
         private const string Initial = "Initial";
-        private const string Payload = "Main";
+        private const string Vertical = "Vertical";
+        private const string Horisontal = "Horisontal";
 
         [Inject] private IJumperServerApi _jumperServerApi;
         [Inject] private ISceneLoader _sceneLoader;
@@ -22,16 +23,15 @@ namespace Infrastructure.States
         public void Enter()
         {
             _accountModel.RefreshBalance(1000f, "USD");
-            _jumperServerApi.AuthRequest(new AuthRequest("3bdda719-8b47-4e19-9282-4ea1df4b1da5",
-                "be67dc74323f3f1142f6152aa3ff0d32",
-                "USD"), 
+            _jumperServerApi.AuthRequest( 
                 () => _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel),
                 null);
         }
 
         private void EnterLoadLevel()
         {
-            _gameStateMachine.Enter<LoadLevelState, string>(Payload);
+            // _gameStateMachine.Enter<LoadLevelState, string>(Payload);
+            _gameStateMachine.Enter<LoadLevelState, string>(Horisontal);
         }
 
         public void Exit()

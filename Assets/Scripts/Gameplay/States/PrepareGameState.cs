@@ -22,22 +22,22 @@ namespace GameModels.StateMachine
 
         public void Enter()
         {
-            // _loadingCurtainsViewer.Enable();
             _characterMover.RefreshCharacter();
             _gameStorage.CurrentFactor = _gameConfigs.DefaultFactor;
+            _loadingCurtainsViewer.Disable();
+        }
+
+        public void Exit()
+        {
+
+            _platformService.ResetPlatformsData();
+            GeneratePlatforms();
         }
 
         private void GeneratePlatforms()
         {
             for (int i = 1; i <= DefaultPlatformCount; i++)
                 _platformService.TryAddPlatformObjectByData(i);
-        }
-
-        public void Exit()
-        {
-            _platformService.ResetPlatformsData();
-            GeneratePlatforms();
-            // _loadingCurtainsViewer.Disable();
         }
     }
 }

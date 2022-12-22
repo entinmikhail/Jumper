@@ -20,7 +20,7 @@ namespace Server
         event Action ResponseReceivedEvent;
         bool IsBusy { get; set; }
 
-        void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null);
+        void AuthRequest(Action callback = null, Action badCallback = null);
         void GetState(Action callback = null , Action badCallback = null );
         void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null);
         void Jump(Action callback = null, Action badCallback = null);
@@ -60,7 +60,7 @@ namespace Server
             };
         }
 
-        public void AuthRequest(AuthRequest authRequest, Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(AuthRequestCoroutine(authRequest, callback, badCallback));
+        public void AuthRequest(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(AuthRequestCoroutine(callback, badCallback));
         public void GetState(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(GetStateRequestCoroutine(callback, badCallback));
         public void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null) => 
             _coroutineRunner.StartCoroutine(BetRequestCoroutine(betRequest, callback, badCallback));
@@ -68,7 +68,7 @@ namespace Server
         public void Cashout(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(CashoutRequestCoroutine(callback, badCallback));
 
         
-        private IEnumerator AuthRequestCoroutine(AuthRequest authRequest, Action callback, Action badCallback)
+        private IEnumerator AuthRequestCoroutine(Action callback, Action badCallback)
         {
             RequestSentEvent?.Invoke();
             Uri appUrl = null;

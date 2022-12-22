@@ -11,6 +11,7 @@ namespace GameModels.StateMachine
     {
     }
 
+
     public class MainGameState : IMainGameState
     {
         [Inject] private IGameHandler _jumpInvoker;

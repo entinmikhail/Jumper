@@ -23,6 +23,7 @@ namespace Gameplay
         [Inject] private IWinGameState _winGameState;
         [Inject] private ILoseGameState _loseGameState;
         [Inject] private IBonusGameState _bonusGameState;
+        [Inject] private ILoadingState _loadingState;
 
         public void Initialize()
         {
@@ -34,6 +35,7 @@ namespace Gameplay
                 { typeof(WinGameState), _winGameState },
                 { typeof(LoseGameState), _loseGameState },
                 { typeof(BonusGameState), _bonusGameState },
+                { typeof(LoadingState), _loadingState },
             });
         }
         

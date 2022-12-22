@@ -32,7 +32,6 @@ public class GameInstaller : MonoInstaller
         Container.Bind<IPlatformService>().To<PlatformService>().AsSingle();
         Container.Bind<IGameStateController>().To<GameStateController>().AsSingle();
         Container.Bind<IGameLoopStateMachine>().To<GameLoopStateMachine>().AsSingle();
-        Container.Bind<IUiLocker>().To<UiLocker>().AsSingle();
         
         BindStates();
     }
@@ -45,5 +44,6 @@ public class GameInstaller : MonoInstaller
         Container.Bind<IWinGameState>().To<WinGameState>().AsSingle();
         Container.Bind<ILoseGameState>().To<LoseGameState>().AsSingle();
         Container.Bind<IBonusGameState>().To<BonusGameState>().AsSingle();
+        Container.Bind<ILoadingState>().To<LoadingState>().AsSingle();
     }
 }

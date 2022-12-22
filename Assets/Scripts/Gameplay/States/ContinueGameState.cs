@@ -18,22 +18,22 @@ namespace GameModels.StateMachine
         [Inject] private IPlatformService _platformService;
         [Inject] private IGameLoopStateMachine _gameLoopStateMachine;
         [Inject] private ILoadingCurtainsViewer _loadingCurtainsViewer;
+        [Inject] private ICoroutineRunner _coroutineRunner;
 
         public void Enter()
         {
-            _loadingCurtainsViewer.Enable();
             for (int i = 1; i < _gameStorage.CurrentAltitude + 4; i++)
                 _platformService.TryAddPlatformObjectByData(i);
-            
-            _characterMover.SetNumberPlatformWithoutAnimation(_gameStorage.CurrentAltitude);
-            _characterMover.SetIdle();
-            _characterMover.RotateCharacter();
+
+            _characterMover.SetNumberPlatformWithoutAnimation(_gameStorage.CurrentAltitude); 
+            _characterMover.SetIdle(); 
+            _characterMover.RotateCharacter(); 
             _gameLoopStateMachine.Enter<MainGameState>();
+            _loadingCurtainsViewer.Disable();
         }
 
         public void Exit()
         {
-            _loadingCurtainsViewer.Disable();
         }
     }
 }

@@ -6,7 +6,7 @@ using Zenject;
 
 public interface IGameStateController
 {
-    void Initialize(GameState gameState);
+    void Initialize();
 }
 
 public class GameStateController : IGameStateController
@@ -14,10 +14,10 @@ public class GameStateController : IGameStateController
     [Inject] private IGameLoopStateMachine _gameLoopStateMachine;
     [Inject] private IGameModel _gameModel;
     
-    public void Initialize(GameState gameState)
+    public void Initialize()
     {
         _gameModel.GameStateChanged += OnGameStateChanged;
-        OnGameStateChanged(gameState);
+        OnGameStateChanged(GameState.LoadingState);
     }
 
     private void OnGameStateChanged(GameState gameState)
@@ -30,6 +30,7 @@ public class GameStateController : IGameStateController
             case GameState.Lose: OnLose(); break;
             case GameState.Win: OnWin(); break;
             case GameState.Bonus: OnBonus(); break;
+            case GameState.LoadingState: OnLoading(); break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(gameState), gameState, null);
         }
@@ -41,4 +42,5 @@ public class GameStateController : IGameStateController
     private void OnLose() => _gameLoopStateMachine.Enter<LoseGameState>();
     private void OnWin() => _gameLoopStateMachine.Enter<WinGameState>();
     private void OnContinue() => _gameLoopStateMachine.Enter<ContinueGameState>();
+    private void OnLoading() => _gameLoopStateMachine.Enter<LoadingState>();
 }

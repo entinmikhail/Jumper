@@ -102,6 +102,7 @@ namespace GameModels
     public enum GameState
     {
         PrepareGameState,
+        LoadingState,
         ContinueGameAfterLogin,
         StartGameplay,
         Lose,

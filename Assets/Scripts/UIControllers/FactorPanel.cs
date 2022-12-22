@@ -32,5 +32,9 @@ namespace UIControllers
         {
             _textMeshPro.text = $"x{_gameStorage.CurrentFactor.ToString("0.00", CultureInfo.InvariantCulture)}";
         }
+        public void SetFactor(float newFactor)
+        {
+            _textMeshPro.text = $"x{newFactor.ToString("0.00", CultureInfo.InvariantCulture)}";
+        }
     }
 }
