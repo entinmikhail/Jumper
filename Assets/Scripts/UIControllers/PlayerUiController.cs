@@ -20,27 +20,33 @@ namespace UIControllers
         [SerializeField] private UIBetPanel _uiBetPanel;
         [Space]
         [SerializeField] private Button _jumpButton;
-        [SerializeField] private Button _cashOutButton;
-        [SerializeField] private Button _bonusBuyButton;
+        [SerializeField] private BetterButton _cashOutButton;
+        [SerializeField] private BetterButton _bonusBuyButton;
         [Space]
         [SerializeField] private TextMeshProUGUI _cashOutText;
         [SerializeField] private TextMeshProUGUI _bonusButtonText;
 
-        [Inject] private IGameStorage _gameStorage;
-        [Inject] private IGameController _gameController;
         [Inject] private IGameModel _gameModel;
-        [Inject] private ICharacterMover _characterMover;
-        [Inject] private ICoroutineRunner _coroutineRunner;
-        [Inject] private INotificationService _notificationService;
+        [Inject] private IGameStorage _gameStorage;
         [Inject] private IGameConfigs _gameConfigs;
+        [Inject] private IAccountModel _accountModel;
+        [Inject] private IGameController _gameController;
+        [Inject] private ICharacterMover _characterMover;
+        [Inject] private INotificationService _notificationService;
 
         private void Awake()
         {
             _jumpButton.onClick.AddListener(OnJump);
-            _cashOutButton.onClick.AddListener(OnCashOut);
-            _bonusBuyButton.onClick.AddListener(OnBonusJump);
+            _cashOutButton.Button.onClick.AddListener(OnCashOut);
+            _bonusBuyButton.Button.onClick.AddListener(OnBonusJump);
             _gameModel.GameStateChanged += OnGameStateChanged;
             _characterMover.MoveEnd += OnMoveEnd;
+            _uiBetPanel.BetChanged += OnBetChanged;
+        }
+
+        private void OnBetChanged(float betAmount)
+        {
+            _bonusButtonText.text = (_gameConfigs.BonusFactor * betAmount).ToString("0.00", CultureInfo.InvariantCulture);
         }
 
         private void OnMoveEnd()
@@ -61,8 +67,20 @@ namespace UIControllers
 
         private void OnBonusJump()
         {
-            _gameController.ActivateBonusJump();
-            OnJump();
+            if (_gameStorage.BetAmount <= 0)
+            {
+                _notificationService.ShowNotification("Сделайте ставку");
+                return;
+            }
+            
+            if (_gameStorage.BetAmount * _gameConfigs.BonusFactor > _accountModel.CurrentBalance)
+            {
+                _notificationService.ShowNotification("Пополните счёт");
+                return;
+            }
+
+            if (_gameModel.GameState == GameState.PrepareGameState)
+                _gameController.BonusJump();
         }
 
         private void OnGameStateChanged(GameState gameState)
@@ -73,7 +91,7 @@ namespace UIControllers
             if (gameState == GameState.Lose) 
                 return;
             
-            _bonusButtonText.text = _gameConfigs.BonusPrice.ToString("0.00", CultureInfo.InvariantCulture);
+            _bonusButtonText.text = (_gameConfigs.BonusFactor * _gameStorage.BetAmount).ToString("0.00", CultureInfo.InvariantCulture);
             RefreshCashText();
             _factorPanel.Refresh();
             _uiBetPanel.SetBet(_gameStorage.BetAmount);
@@ -93,6 +111,15 @@ namespace UIControllers
 
         private void OnJump()
         {
+            if (_gameModel.GameState == GameState.Lose)
+                return;
+
+            if (_gameStorage.BetAmount > _accountModel.CurrentBalance)
+            {
+                _notificationService.ShowNotification("Пополните счёт");
+                return;
+            }
+            
             if (_gameStorage.BetAmount <= 0)
             {
                 _notificationService.ShowNotification("Сделайте ставку");

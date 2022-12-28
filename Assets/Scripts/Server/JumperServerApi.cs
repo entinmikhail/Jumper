@@ -75,18 +75,19 @@ namespace Server
         {
             SocketOptions options = new SocketOptions();
             options.AutoConnect = false;
-            var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/?Authorization={_authToken}&operatorId={_operatorId}"));
-            // var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}&transport=websocket"));
+            // var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/?Authorization={_authToken}&operatorId={_operatorId}"));
+            var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}&transport=websocket"));
             var root = manager.Socket;
             
             // var onBalanceChange = manager.GetSocket("onBalanceChange");
             // var currencies = manager.GetSocket("currencies");
             // var betsRanges = manager.GetSocket("betsRanges");
-            
-            manager.Socket.On("onBalanceChange", () => Debug.Log(manager.Handshake.Sid));
-            manager.Socket.On("currencies", () => Debug.Log(manager.Handshake.Sid));
-            manager.Socket.On("betsRanges", () => Debug.Log(manager.Handshake.Sid));
-            manager.Socket.On("connect", () => Debug.Log(manager.Handshake.Sid));
+            manager.Open();
+            // Debug.Log(manager.Handshake.Sid);
+            manager.Socket.On("onBalanceChange", () => Debug.Log(1));
+            manager.Socket.On("currencies", () => Debug.Log(1));
+            manager.Socket.On("betsRanges", () => Debug.Log(1));
+            manager.Socket.On("connect", () => Debug.Log(1));
         }
         
         private IEnumerator AuthRequestCoroutine(Action callback, Action badCallback)
@@ -156,7 +157,7 @@ namespace Server
             else
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
-
+                // AuthRequest();
                 badCallback?.Invoke();
             }
             

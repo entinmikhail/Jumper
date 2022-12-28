@@ -1261,7 +1261,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.059999943, z: -10}
+  m_LocalPosition: {x: 0, y: -0.00999999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1782,7 +1782,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &778636014
@@ -2703,7 +2703,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 3
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -2716,7 +2716,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 21300000, guid: 2127862989eb4624eb92d4927366f396, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 011fb2e840fb61748b24f5c9473631c3, type: 3}
+    m_DisabledSprite: {fileID: 21300000, guid: cc49e3bd8f437b540839cea55984ca9c, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -2781,9 +2781,9 @@ MonoBehaviour:
   _onBusy:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1097854689}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
+      - m_Target: {fileID: 1097854693}
+        m_TargetAssemblyTypeName: UIControllers.BetterButton, Core
+        m_MethodName: SetInteractable
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2796,9 +2796,9 @@ MonoBehaviour:
   _onNotBusy:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1097854689}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
+      - m_Target: {fileID: 1097854693}
+        m_TargetAssemblyTypeName: UIControllers.BetterButton, Core
+        m_MethodName: SetInteractable
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2808,26 +2808,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!95 &1097854693
-Animator:
-  serializedVersion: 4
+--- !u!114 &1097854693
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1097854687}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 43830c7e922c42642ae5ff363a8e38fa, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71e6c902009144c7a33d40d4fc533003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 1097854689}
+  _graphics:
+  - {fileID: 1396989433}
+  - {fileID: 778636013}
+  - {fileID: 1817730997}
+  _pressedColor: {r: 0.09411766, g: 0.30588236, b: 0.18039216, a: 1}
+  _defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  _disabledColor: {r: 0.17254902, g: 0.23137257, b: 0.29803923, a: 1}
 --- !u!1 &1113970284
 GameObject:
   m_ObjectHideFlags: 0
@@ -2925,8 +2925,8 @@ MonoBehaviour:
   _factorPanel: {fileID: 1289644399}
   _uiBetPanel: {fileID: 1173001910}
   _jumpButton: {fileID: 274856368}
-  _cashOutButton: {fileID: 1097854689}
-  _bonusBuyButton: {fileID: 1494813551}
+  _cashOutButton: {fileID: 1097854693}
+  _bonusBuyButton: {fileID: 1494813555}
   _cashOutText: {fileID: 1396989433}
   _bonusButtonText: {fileID: 214684599}
 --- !u!1001 &1129984567
@@ -3938,10 +3938,10 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -3.3623962, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1396989434
@@ -4421,13 +4421,14 @@ GameObject:
   - component: {fileID: 1494813552}
   - component: {fileID: 1494813551}
   - component: {fileID: 1494813554}
+  - component: {fileID: 1494813555}
   m_Layer: 5
   m_Name: BonusBuy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1494813550
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4483,7 +4484,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 21300000, guid: e2f7556427042a04eb3ed31853aeec89, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 011fb2e840fb61748b24f5c9473631c3, type: 3}
+    m_DisabledSprite: {fileID: 21300000, guid: cc49e3bd8f437b540839cea55984ca9c, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -4548,9 +4549,9 @@ MonoBehaviour:
   _onBusy:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1494813551}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
+      - m_Target: {fileID: 1494813555}
+        m_TargetAssemblyTypeName: UIControllers.BetterButton, Core
+        m_MethodName: SetInteractable
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4563,9 +4564,9 @@ MonoBehaviour:
   _onNotBusy:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1494813551}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
+      - m_Target: {fileID: 1494813555}
+        m_TargetAssemblyTypeName: UIControllers.BetterButton, Core
+        m_MethodName: SetInteractable
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4575,6 +4576,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &1494813555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494813549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71e6c902009144c7a33d40d4fc533003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 1494813551}
+  _graphics:
+  - {fileID: 214684599}
+  - {fileID: 1072353825}
+  - {fileID: 2135896227}
+  _pressedColor: {r: 0.3921569, g: 0.10196079, b: 0.15294118, a: 1}
+  _defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  _disabledColor: {r: 0.17254902, g: 0.23137257, b: 0.29803923, a: 1}
 --- !u!1 &1563323573
 GameObject:
   m_ObjectHideFlags: 0
@@ -6848,6 +6869,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 38189143}
     m_Modifications:
+    - target: {fileID: 167380078, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: _particle
+      value: 
+      objectReference: {fileID: 4634635671800849022}
+    - target: {fileID: 77860314189344784, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 502035430936605829, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: ShapeModule.angle
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 502035430936605829, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 502035430936605829, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 1807059226759692327, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -6872,6 +6913,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4387469171055245104, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4634635671933363728, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -6882,7 +6927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4634635671933363728, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.06
+      value: -3.01
       objectReference: {fileID: 0}
     - target: {fileID: 4634635671933363728, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6958,6 +7003,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+--- !u!1 &4634635671800849022 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4387469171055245104, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+  m_PrefabInstance: {fileID: 4634635671800849021}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5281624010773787135
 PrefabInstance:
   m_ObjectHideFlags: 0

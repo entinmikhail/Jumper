@@ -1,4 +1,5 @@
-﻿using Server;
+﻿using Configs;
+using Server;
 using Zenject;
 
 namespace GameModels
@@ -7,7 +8,7 @@ namespace GameModels
     {
         void Jump();
         void FirstJump();
-        void ActivateBonusJump();
+        void BonusJump();
         void Cashout();
     }
 
@@ -16,6 +17,7 @@ namespace GameModels
         [Inject] private IGameStorage _gameStorage;
         [Inject] private IAccountModel _accountModel;
         [Inject] private IJumperServerApi _jumperServerApi;
+        [Inject] private IGameConfigs _gameConfigs;
 
         public void Jump()
         {
@@ -27,12 +29,14 @@ namespace GameModels
             _jumperServerApi.ToBet(new BetRequest(_gameStorage.BetAmount, _accountModel.CurrentCurrency, _gameStorage.IsWithBonus));
             _accountModel.ChangeBalance(-_gameStorage.BetAmount);
         }
-        
-        public void ActivateBonusJump()
+
+        public void BonusJump()
         {
             _gameStorage.SetBonusStart(true);
+            _jumperServerApi.ToBet(new BetRequest(_gameStorage.BetAmount, _accountModel.CurrentCurrency, _gameStorage.IsWithBonus));
+            _accountModel.ChangeBalance(-_gameStorage.BetAmount * _gameConfigs.BonusFactor);
         }
-
+        
         public void Cashout()
         {
             _jumperServerApi.Cashout();

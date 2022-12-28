@@ -6,13 +6,13 @@ namespace GameModels.StateMachine
     
     public class LoadingState : ILoadingState
     {
-        
         public void Exit()
         {
         }
 
         public void Enter()
         {
+
         }
     }
 }

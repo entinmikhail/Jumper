@@ -24,12 +24,12 @@ namespace Server
 
         private void OnBusy()
         {
-            _onBusy.Invoke();
+            _onBusy?.Invoke();
         }
 
         private void OnNotBusy()
         {
-            _onNotBusy.Invoke();
+            _onNotBusy?.Invoke();
         }
 
         private void OnDisable()

@@ -13,6 +13,7 @@ namespace GameModels.StateMachine
     public class PrepareGameState : IPrepareGameState
     {
         private const int DefaultPlatformCount = 3;
+        private bool _first = true;
 
         [Inject] private ILoadingCurtainsViewer _loadingCurtainsViewer;
         [Inject] private IPlatformService _platformService;
@@ -22,6 +23,12 @@ namespace GameModels.StateMachine
 
         public void Enter()
         {
+            if (_first)
+            {
+                GeneratePlatforms();
+                _first = !_first;
+            }
+            
             _characterMover.RefreshCharacter();
             _gameStorage.CurrentFactor = _gameConfigs.DefaultFactor;
             _loadingCurtainsViewer.Disable();
@@ -29,7 +36,6 @@ namespace GameModels.StateMachine
 
         public void Exit()
         {
-
             _platformService.ResetPlatformsData();
             GeneratePlatforms();
         }

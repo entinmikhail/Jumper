@@ -22,6 +22,7 @@ namespace Character
         void SetActive(bool value);
         void RotateCharacter();
         void RotateCharacter(int currentCharacterPlatformNumber);
+        CharacterController CharacterController { get; }
     }
 
     public class CharacterMover : MonoBehaviour, ICharacterMover
@@ -30,6 +31,7 @@ namespace Character
         [SerializeField] private CinemachineBrain _cinemachineBrain;
         [SerializeField] private Transform _characterSpawnRoot;
 
+        public CharacterController CharacterController => _characterController;
         public event Action PlatformBroke;
         public event Action MoveEnd;
 
@@ -74,14 +76,12 @@ namespace Character
         {
             if (_gameModel.GameState is GameState.StartGameplay or GameState.Bonus or GameState.ContinueGameAfterLogin)
             {
-                RotateCharacter();
                 _characterController.PlayWin();
+                RotateCharacter();
             }
 
             if (_gameModel.GameState == GameState.Lose)
             {
-                RotateCharacter();
-                
                 if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var platform))
                 {
                     Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
@@ -94,9 +94,10 @@ namespace Character
                 {
                     platform.gameObject.SetActive(false);
                 });
-                
+
                 _characterController.PlayLose();
-                
+                RotateCharacter();
+
                 _coroutineRunner.StartAfterDelay(_animationDurationConfig.LoseAnimationTime, () =>
                 {
                     _characterController.SpriteRenderer.enabled = false;
@@ -108,8 +109,6 @@ namespace Character
         public void SetNumberPlatformWithoutAnimation(int numberPlatform)
         {
             _currentCharacterPlatformNumber = numberPlatform;
-            // _cinemachineBrain.enabled = false;
-            //
             if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var nextPlatformContainer))
             {
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
@@ -119,14 +118,6 @@ namespace Character
             }
             
             _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
-            // _cinemachineBrain.gameObject.transform.position =
-            //     new Vector3(
-            //         _cinemachineBrain.gameObject.transform.position.y - _characterSpawnRoot.position.y +
-            //         _characterController.gameObject.transform.position.y,
-            //         0, 0);
-            
-            // _cinemachineBrain.enabled = true;
-
         }
         
 

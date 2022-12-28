@@ -2,6 +2,7 @@
 using System.Globalization;
 using Configs;
 using Server;
+using UIControllers;
 using UnityEngine;
 using Zenject;
 
@@ -68,7 +69,7 @@ namespace GameModels
                 Debug.LogError("initialStateResponse");
                 return;
             }
-            
+            _gameConfigs.BonusFactor = initialStateResponse.bonusBuyK;
             BetAmount = initialStateResponse.betAmount;
             Currency = initialStateResponse.currency;
             IsWin = initialStateResponse.isWin;
@@ -82,6 +83,11 @@ namespace GameModels
             }
             foreach (var step in initialStateResponse.steps)
             {
+                if (step.altitude == 0 || step.coefficient == "")
+                {
+                    Debug.LogError($"Некорректный коэфицент: {step.coefficient}");
+                    continue;
+                }
                 PrevCoefficient = CurrentFactor;
                 CurrentFactor = float.Parse(step.coefficient, CultureInfo.InvariantCulture.NumberFormat);
                 CurrentAltitude = step.altitude;
@@ -122,7 +128,6 @@ namespace GameModels
         public void SetBonusStart(bool value)
         {
             IsWithBonus = value;
-            _accountModel.ChangeBalance(-_gameConfigs.BonusPrice);
         }
 
         public void ResetData()

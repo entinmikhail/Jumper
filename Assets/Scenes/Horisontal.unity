@@ -2890,8 +2890,8 @@ MonoBehaviour:
   _factorPanel: {fileID: 1289644399}
   _uiBetPanel: {fileID: 1173001910}
   _jumpButton: {fileID: 274856368}
-  _cashOutButton: {fileID: 1384334373}
-  _bonusBuyButton: {fileID: 1494813551}
+  _cashOutButton: {fileID: 0}
+  _bonusBuyButton: {fileID: 0}
   _cashOutText: {fileID: 11459517}
   _bonusButtonText: {fileID: 214684599}
 --- !u!1001 &1129984567
@@ -6924,6 +6924,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 38189143}
     m_Modifications:
+    - target: {fileID: 167380078, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: _particle
+      value: 
+      objectReference: {fileID: 4634635671800849022}
     - target: {fileID: 1807059226759692327, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -6947,6 +6951,10 @@ PrefabInstance:
     - target: {fileID: 3608154198849227005, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4387469171055245104, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4634635671933363728, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_RootOrder
@@ -7013,6 +7021,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 7c136539a5c1f7c4ea2b4be80757f784, type: 3}
     - target: {fileID: 4634635672980815028, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634635672980815028, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
@@ -7034,6 +7046,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+--- !u!1 &4634635671800849022 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4387469171055245104, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+  m_PrefabInstance: {fileID: 4634635671800849021}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5281624010773787135
 PrefabInstance:
   m_ObjectHideFlags: 0

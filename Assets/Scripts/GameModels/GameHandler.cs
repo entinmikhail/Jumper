@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using Configs;
 using Server;
 using UnityEngine;
 using Zenject;
@@ -25,6 +27,7 @@ namespace GameModels
         public event Action<int, string> Jumped;
         
         [Inject] private IGameStorage _gameStorage;
+        [Inject] private IGameConfigs _gameConfigs;
         [Inject] private IGameModel _gameModel;
         
         public void BonusBetHandle(BonusBetResponse response)
@@ -39,9 +42,10 @@ namespace GameModels
         
         public void InitializeHandle(GetStateResponse initialStateResponse)
         {
-            if (initialStateResponse == null)
+            if (initialStateResponse == null || initialStateResponse.steps?.First().altitude == 0)
             {
                 _gameModel.SetGameState(GameState.PrepareGameState);
+                _gameConfigs.BonusFactor = initialStateResponse?.bonusBuyK ?? 10;
                 return;
             }
 
@@ -72,8 +76,17 @@ namespace GameModels
             
             _gameStorage.RefreshData(response);
             
-            foreach (var step in response.steps)
-                JumpToPlatform(step);
+            if (response.steps != null)
+            {
+                foreach (var step in response.steps)
+                    JumpToPlatform(step);
+            }
+            
+            if (response.isWin)
+                return;
+            _gameStorage.ResetData();
+            _gameModel.SetGameState(GameState.Lose);
+
         }
 
 

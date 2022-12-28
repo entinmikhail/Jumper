@@ -24,6 +24,12 @@ namespace Gameplay
         public void Enter()
         {
             _gameHandler.Jumped += OnJumped;
+            _characterMover.MoveEnd += OnMoveEnd;
+        }
+
+        private void OnMoveEnd()
+        {
+            _characterMover.CharacterController.SetParticle(false);
         }
 
         private void OnJumped(int arg1, string arg2)
@@ -31,10 +37,13 @@ namespace Gameplay
             _gameAnimatorController.PlayBonusJump();
             for (int i = 1; i < _gameStorage.CurrentAltitude + 4; i++)
                 _platformService.TryAddPlatformObjectByData(i);
-            _characterMover.RotateCharacter(_gameStorage.CurrentAltitude+1);
+            
+            _characterMover.RotateCharacter(_gameStorage.CurrentAltitude + 1);
+            
             _coroutineRunner.StartAfterDelay(_animationDurationConfig.AwaitingBonusAnimationTime, () =>
             {
                 _characterMover.SetNumberPlatform(_gameStorage.CurrentAltitude, _animationDurationConfig.BonusJumpAnimationTime);
+                _characterMover.CharacterController.SetParticle(true);
                 _gameAnimatorController.StartRotationAnimation(
                     _gameStorage.CurrentFactor, _animationDurationConfig.BonusJumpAnimationTime, 
                     _gameStorage.PrevCoefficient);
@@ -45,7 +54,7 @@ namespace Gameplay
                                              + _animationDurationConfig.IdleDelayAnimationTime 
                                              + _animationDurationConfig.WinAnimationTime, 
                 () => 
-                { 
+                {
                     _gameLoopStateMachine.Enter<MainGameState>(); 
                 });
         }
