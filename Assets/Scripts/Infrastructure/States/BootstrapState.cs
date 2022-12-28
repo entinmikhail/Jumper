@@ -24,7 +24,12 @@ namespace Infrastructure.States
         public void Enter()
         {
             _accountModel.RefreshBalance(1000f, "USD");
-            _jumperServerApi.AuthRequest(() => _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel));
+            _jumperServerApi.AuthRequest(() =>
+            {
+                _jumperServerApi.InitializeSocketIO();
+                _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel);
+            });
+            
         }
 
         private void EnterLoadLevel()

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Text;
 using System.Web;
+using BestHTTP.SocketIO3;
 using GameModels;
 using UIControllers;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace Server
         void ToBet(BetRequest betRequest, Action callback = null, Action badCallback = null);
         void Jump(Action callback = null, Action badCallback = null);
         void Cashout(Action callback = null, Action badCallback = null);
+        void InitializeSocketIO();
         
         void Init(INotificationService notificationService);
     }
@@ -40,6 +42,7 @@ namespace Server
         public bool IsBusy { get; set; }
 
         private string _authToken;
+        private string _operatorId;
 
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private IGameHandler _gameHandler;
@@ -67,6 +70,24 @@ namespace Server
         public void Jump(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(JumpRequestCoroutine(callback, badCallback));
         public void Cashout(Action callback = null, Action badCallback = null) => _coroutineRunner.StartCoroutine(CashoutRequestCoroutine(callback, badCallback));
 
+
+        public void InitializeSocketIO()
+        {
+            SocketOptions options = new SocketOptions();
+            options.AutoConnect = false;
+            var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/?Authorization={_authToken}&operatorId={_operatorId}"));
+            // var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}&transport=websocket"));
+            var root = manager.Socket;
+            
+            // var onBalanceChange = manager.GetSocket("onBalanceChange");
+            // var currencies = manager.GetSocket("currencies");
+            // var betsRanges = manager.GetSocket("betsRanges");
+            
+            manager.Socket.On("onBalanceChange", () => Debug.Log(manager.Handshake.Sid));
+            manager.Socket.On("currencies", () => Debug.Log(manager.Handshake.Sid));
+            manager.Socket.On("betsRanges", () => Debug.Log(manager.Handshake.Sid));
+            manager.Socket.On("connect", () => Debug.Log(manager.Handshake.Sid));
+        }
         
         private IEnumerator AuthRequestCoroutine(Action callback, Action badCallback)
         {
@@ -79,14 +100,14 @@ namespace Server
 #if UNITY_EDITOR
             appUrl = new Uri("http://localhost/UnityBuilds/Jumper?operatorId=3bdda719-8b47-4e19-9282-4ea1df4b1da5&authToken=be67dc74323f3f1142f6152aa3ff0d32&currency=USD");
 #endif
-            string operatorId = HttpUtility.ParseQueryString(appUrl.Query).Get("operatorId");
+            _operatorId = HttpUtility.ParseQueryString(appUrl.Query).Get("operatorId");
             string authToken = HttpUtility.ParseQueryString(appUrl.Query).Get("authToken");
             string currency = HttpUtility.ParseQueryString(appUrl.Query).Get("currency");
             string lang = HttpUtility.ParseQueryString(appUrl.Query).Get("lang");
             
             var from = new WWWForm();
             var url = "https://api-dev.inout.games/api/auth";
-            from.AddField("operator", operatorId);
+            from.AddField("operator", _operatorId);
             from.AddField("auth_token", authToken);
             from.AddField("currency", currency);
             using var request = UnityWebRequest.Post(url, from);
