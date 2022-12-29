@@ -33,8 +33,6 @@ namespace Infrastructure.States
 
         private void EnterLoadLevel()
         {
-            Debug.LogError("Screen.width = " + Screen.width);
-            Debug.LogError("Screen.height = " + Screen.height);
             var screenFactor = Screen.width / Screen.height;
             _gameStateMachine.Enter<LoadLevelState, string>(screenFactor >= 1 ? Horisontal : Vertical);
         }

@@ -43,11 +43,14 @@ namespace Server
 
         private string _authToken;
         private string _operatorId;
-
+        private float _waitSeconds = 2;
+        
+        private INotificationService _notificationService;
+        [Inject] private IButtonsLockService _buttonsLockService;
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private IGameHandler _gameHandler;
-        private INotificationService _notificationService;
-        private float _waitSeconds = 2;
+
+
 
         public void Init(INotificationService notificationService)
         {
@@ -96,11 +99,16 @@ namespace Server
             Uri appUrl = null;
 #if UNITY_WEBGL && !UNITY_EDITOR
              appUrl = new Uri(Application.absoluteURL);
+
+            if (appUrl == null)
+                Debug.LogError("Uri does not hav data");
 #endif
             
 #if UNITY_EDITOR
             appUrl = new Uri("http://localhost/UnityBuilds/Jumper?operatorId=3bdda719-8b47-4e19-9282-4ea1df4b1da5&authToken=be67dc74323f3f1142f6152aa3ff0d32&currency=USD");
 #endif
+
+
             _operatorId = HttpUtility.ParseQueryString(appUrl.Query).Get("operatorId");
             string authToken = HttpUtility.ParseQueryString(appUrl.Query).Get("authToken");
             string currency = HttpUtility.ParseQueryString(appUrl.Query).Get("currency");
@@ -158,6 +166,7 @@ namespace Server
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
                 _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
+                // _buttonsLockService.LockAllButtons();
                 // AuthRequest();
                 badCallback?.Invoke();
             }
@@ -199,6 +208,7 @@ namespace Server
                 {
                     _notificationService.ShowNotification(request.downloadHandler.text);
                     _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
+                    // _buttonsLockService.LockAllButtons();
 
                     badCallback?.Invoke();
                 }
@@ -219,7 +229,7 @@ namespace Server
                 {
                     _notificationService.ShowNotification(request.downloadHandler.text);
                     _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
-
+                    // _buttonsLockService.LockAllButtons();
                 }
             }
             
@@ -256,6 +266,8 @@ namespace Server
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
                 _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
+                _buttonsLockService.LockAllButtons();
+
 
             }
             
@@ -289,6 +301,8 @@ namespace Server
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
                 _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
+                _buttonsLockService.LockAllButtons();
+
 
                 badCallback?.Invoke();
             }

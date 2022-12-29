@@ -1,5 +1,6 @@
 ﻿using GameModels.StateMachine;
 using Infrastructure.States;
+using UnityEngine;
 using Zenject;
 
 public interface IGame

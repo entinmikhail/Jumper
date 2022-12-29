@@ -832,6 +832,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  _onLostConnection:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &299726106
 GameObject:
   m_ObjectHideFlags: 0
@@ -2808,6 +2811,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  _onLostConnection:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1097854693}
+        m_TargetAssemblyTypeName: UIControllers.BetterButton, Core
+        m_MethodName: SetLostConnection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1097854693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2828,6 +2846,8 @@ MonoBehaviour:
   _pressedColor: {r: 0.09411766, g: 0.30588236, b: 0.18039216, a: 1}
   _defaultColor: {r: 1, g: 1, b: 1, a: 1}
   _disabledColor: {r: 0.17254902, g: 0.23137257, b: 0.29803923, a: 1}
+  _lostConnectionColor: {r: 1, g: 1, b: 1, a: 1}
+  _lostConnectionsSprite: {fileID: 21300000, guid: 011fb2e840fb61748b24f5c9473631c3, type: 3}
 --- !u!1 &1113970284
 GameObject:
   m_ObjectHideFlags: 0
@@ -4576,6 +4596,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  _onLostConnection:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1494813555}
+        m_TargetAssemblyTypeName: UIControllers.BetterButton, Core
+        m_MethodName: SetLostConnection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1494813555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4596,6 +4631,8 @@ MonoBehaviour:
   _pressedColor: {r: 0.3921569, g: 0.10196079, b: 0.15294118, a: 1}
   _defaultColor: {r: 1, g: 1, b: 1, a: 1}
   _disabledColor: {r: 0.17254902, g: 0.23137257, b: 0.29803923, a: 1}
+  _lostConnectionColor: {r: 1, g: 1, b: 1, a: 1}
+  _lostConnectionsSprite: {fileID: 21300000, guid: 011fb2e840fb61748b24f5c9473631c3, type: 3}
 --- !u!1 &1563323573
 GameObject:
   m_ObjectHideFlags: 0

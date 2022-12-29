@@ -3,6 +3,7 @@ using GameModels;
 using GameModels.StateMachine;
 using Infrastructure.States;
 using Server;
+using UIControllers;
 using UnityEngine;
 using Zenject;
 
@@ -28,6 +29,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<IGameStorage>().To<GameStorage>().AsSingle();
         Container.Bind<IGameController>().To<GameController>().AsSingle();
         Container.Bind<IGameHandler>().To<GameHandler>().AsSingle();
+        Container.Bind<IButtonsLockService>().To<ButtonsLockService>().AsSingle();
 
         BindStates();
         

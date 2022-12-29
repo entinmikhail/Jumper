@@ -32,7 +32,6 @@ public class GameInstaller : MonoInstaller
         Container.Bind<IPlatformService>().To<PlatformService>().AsSingle();
         Container.Bind<IGameStateController>().To<GameStateController>().AsSingle();
         Container.Bind<IGameLoopStateMachine>().To<GameLoopStateMachine>().AsSingle();
-        Container.Bind<IButtonsLockService>().To<ButtonsLockService>().AsSingle();
         
         BindStates();
     }

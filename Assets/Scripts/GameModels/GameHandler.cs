@@ -61,12 +61,12 @@ namespace GameModels
                 foreach (var step in jumpResponse.steps)
                     JumpToPlatform(step);
             }
-            
-            if (jumpResponse.isWin)
-                return;
-            
-            _gameStorage.ResetData();
-            _gameModel.SetGameState(GameState.Lose);
+
+            if (!jumpResponse.isWin)
+            {
+                _gameStorage.ResetData();
+                _gameModel.SetGameState(GameState.Lose);
+            }
         }
 
         public void BetHandle(BetResponse response)

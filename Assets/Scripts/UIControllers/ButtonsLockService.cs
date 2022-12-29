@@ -6,23 +6,25 @@ namespace UIControllers
     {
         event Action AllButtonsLocked;
         event Action AllButtonsUnlocked;
+        event Action<bool> LostConnection;
+
         void LockAllButtons();
         void UnlockAllButtons();
+        void SetLostConnectionButtonState(bool value);
     }
 
     public class ButtonsLockService : IButtonsLockService
     {
         public event Action AllButtonsLocked;
         public event Action AllButtonsUnlocked;
-        
-        public void LockAllButtons()
-        {
-            AllButtonsLocked?.Invoke();
-        }
+        public event Action<bool> LostConnection;
 
-        public void UnlockAllButtons()
+        public void LockAllButtons() => AllButtonsLocked?.Invoke();
+        public void UnlockAllButtons() => AllButtonsUnlocked?.Invoke();
+
+        public void SetLostConnectionButtonState(bool value)
         {
-            AllButtonsUnlocked?.Invoke();
+            LostConnection?.Invoke(value);
         }
     }
 }

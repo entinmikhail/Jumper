@@ -7,12 +7,13 @@ namespace UIControllers
     [RequireComponent(typeof(Button))]
     public class BetterButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        
         [SerializeField] private Button _button;
         [SerializeField] private Graphic[] _graphics;
         [SerializeField] private Color _pressedColor;
         [SerializeField] private Color _defaultColor;
         [SerializeField] private Color _disabledColor;
+        [SerializeField] private Color _lostConnectionColor;
+        [SerializeField] private Sprite _lostConnectionsSprite;
         
         public Button Button => _button;
 
@@ -29,6 +30,13 @@ namespace UIControllers
                 SetColorToGraphic(_defaultColor);
         }
 
+        public void SetLostConnection()
+        {
+            SetColorToGraphic(_lostConnectionColor);
+            _button.interactable = false;
+            _button.image.sprite = _lostConnectionsSprite;
+        }
+        
         public void SetInteractable(bool value)
         {
             _button.interactable = value;
