@@ -84,10 +84,8 @@ namespace Character
             {
                 if (!_platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out var platform))
                 {
-                    Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
                     GenerateUndignifiedPlatform();
                     _platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out platform);
-
                 }
 
                 _coroutineRunner.StartAfterDelay(_animationDurationConfig.IdleDelayAnimationTime, () =>

@@ -2890,8 +2890,8 @@ MonoBehaviour:
   _factorPanel: {fileID: 1289644399}
   _uiBetPanel: {fileID: 1173001910}
   _jumpButton: {fileID: 274856368}
-  _cashOutButton: {fileID: 0}
-  _bonusBuyButton: {fileID: 0}
+  _cashOutButton: {fileID: 1384334376}
+  _bonusBuyButton: {fileID: 1494813555}
   _cashOutText: {fileID: 11459517}
   _bonusButtonText: {fileID: 214684599}
 --- !u!1001 &1129984567
@@ -3898,6 +3898,7 @@ GameObject:
   - component: {fileID: 1384334374}
   - component: {fileID: 1384334373}
   - component: {fileID: 1384334372}
+  - component: {fileID: 1384334376}
   m_Layer: 5
   m_Name: Cashout
   m_TagString: Untagged
@@ -4052,6 +4053,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1384334370}
   m_CullTransparentMesh: 1
+--- !u!114 &1384334376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384334370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71e6c902009144c7a33d40d4fc533003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 1384334373}
+  _graphics:
+  - {fileID: 11459517}
+  - {fileID: 786098245}
+  - {fileID: 1953461670}
+  _pressedColor: {r: 0.09411766, g: 0.30588236, b: 0.18039216, a: 1}
+  _defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  _disabledColor: {r: 0.17254902, g: 0.23137257, b: 0.29803923, a: 1}
 --- !u!1 &1396113198
 GameObject:
   m_ObjectHideFlags: 0
@@ -4571,6 +4592,7 @@ GameObject:
   - component: {fileID: 1494813552}
   - component: {fileID: 1494813551}
   - component: {fileID: 1494813554}
+  - component: {fileID: 1494813555}
   m_Layer: 5
   m_Name: BonusBuy
   m_TagString: Untagged
@@ -4725,6 +4747,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &1494813555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494813549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71e6c902009144c7a33d40d4fc533003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 1494813551}
+  _graphics:
+  - {fileID: 214684599}
+  - {fileID: 1072353825}
+  - {fileID: 2135896227}
+  _pressedColor: {r: 0.3921569, g: 0.10196079, b: 0.15294118, a: 1}
+  _defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  _disabledColor: {r: 0.17254902, g: 0.23137257, b: 0.29803923, a: 1}
 --- !u!1 &1563323573
 GameObject:
   m_ObjectHideFlags: 0
@@ -6924,10 +6966,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 38189143}
     m_Modifications:
-    - target: {fileID: 167380078, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
-      propertyPath: _particle
-      value: 
-      objectReference: {fileID: 4634635671800849022}
+    - target: {fileID: 77860314189344784, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.35
+      objectReference: {fileID: 0}
     - target: {fileID: 1807059226759692327, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -6951,10 +6993,6 @@ PrefabInstance:
     - target: {fileID: 3608154198849227005, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4387469171055245104, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4634635671933363728, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
       propertyPath: m_RootOrder
@@ -7046,11 +7084,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
---- !u!1 &4634635671800849022 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4387469171055245104, guid: 98b859c4baa298a489f5b3be795dbfd8, type: 3}
-  m_PrefabInstance: {fileID: 4634635671800849021}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5281624010773787135
 PrefabInstance:
   m_ObjectHideFlags: 0

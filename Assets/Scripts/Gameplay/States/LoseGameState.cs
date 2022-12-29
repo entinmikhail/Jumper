@@ -2,6 +2,7 @@
 using Configs;
 using GameModels.StateMachine;
 using Platforms;
+using UIControllers;
 using Zenject;
 
 namespace Gameplay
@@ -14,14 +15,17 @@ namespace Gameplay
     {
         [Inject] private ICharacterMover _characterMover;
         [Inject] private IAnimationDurationConfig _animationDurationConfig;
+        [Inject] private IButtonsLockService _buttonsLockService;
 
         public void Enter()
         {
             _characterMover.MoveToNextPlatform(_animationDurationConfig.DefaultJumpAnimationTime);
+            _buttonsLockService.LockAllButtons();
         }
 
         public void Exit()
         {
+
         }
     }
 }

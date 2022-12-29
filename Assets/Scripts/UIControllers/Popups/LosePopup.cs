@@ -12,6 +12,7 @@ namespace Popups
 
         [Inject] private IGameModel _gameModel;
         [Inject] private IUiBus _uiBus;
+        [Inject] private IButtonsLockService _buttonsLockService;
         
         private void Awake()
         {
@@ -24,6 +25,7 @@ namespace Popups
             gameObject.SetActive(false);
             _gameModel.SetGameState(GameState.PrepareGameState);
             _uiBus.SetActiveFactor(true);
+            _buttonsLockService.UnlockAllButtons();
         }
     }
 }

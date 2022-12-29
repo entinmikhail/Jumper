@@ -200,8 +200,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 0.5
+      scalar: 0.2
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -746,7 +746,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 4
-    angle: 5
+    angle: 3
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 0
@@ -4976,7 +4976,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 4634635671800849023}
   _spriteRenderer: {fileID: 4634635672980815028}
-  _particle: {fileID: 0}
+  _particle: {fileID: 4387469171055245104}
 --- !u!1 &4634635672980815034
 GameObject:
   m_ObjectHideFlags: 0
