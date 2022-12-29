@@ -1,7 +1,6 @@
 ﻿using Character;
 using Configs;
 using GameModels.StateMachine;
-using Platforms;
 using UIControllers;
 using Zenject;
 

@@ -157,6 +157,7 @@ namespace Server
             else
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
+                _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
                 // AuthRequest();
                 badCallback?.Invoke();
             }
@@ -197,6 +198,8 @@ namespace Server
                 else
                 {
                     _notificationService.ShowNotification(request.downloadHandler.text);
+                    _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
+
                     badCallback?.Invoke();
                 }
             }
@@ -215,6 +218,8 @@ namespace Server
                 else
                 {
                     _notificationService.ShowNotification(request.downloadHandler.text);
+                    _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
+
                 }
             }
             
@@ -250,6 +255,8 @@ namespace Server
             else
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
+                _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
+
             }
             
             _coroutineRunner.StartAfterDelay(_waitSeconds, () =>
@@ -281,6 +288,7 @@ namespace Server
             else
             {
                 _notificationService.ShowNotification(request.downloadHandler.text);
+                _notificationService.ShowNotification("Потеряно соединение, пожалуйста перезайдите");
 
                 badCallback?.Invoke();
             }
