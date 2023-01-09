@@ -42,7 +42,9 @@ namespace GameModels
         
         public void InitializeHandle(GetStateResponse initialStateResponse)
         {
-            if (initialStateResponse == null || initialStateResponse.steps?.First().altitude == 0)
+            if (initialStateResponse == null 
+                || initialStateResponse.steps?.First().altitude == 0 
+                || initialStateResponse.steps == null)
             {
                 _gameModel.SetGameState(GameState.PrepareGameState);
                 _gameConfigs.BonusFactor = initialStateResponse?.bonusBuyK ?? 10;

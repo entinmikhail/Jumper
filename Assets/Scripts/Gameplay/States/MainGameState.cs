@@ -3,6 +3,8 @@ using Character;
 using Configs;
 using Platforms;
 using Popups;
+using UIControllers;
+using UnityEngine;
 using Zenject;
 
 namespace GameModels.StateMachine
@@ -17,9 +19,10 @@ namespace GameModels.StateMachine
         [Inject] private IGameHandler _jumpInvoker;
         [Inject] private IPopupService _popupService;
         [Inject] private ICharacterMover _characterMover;
-        [Inject] private IPlatformService _platformService;
-        [Inject] private IAnimationDurationConfig _animationDurationConfig;
         [Inject] private ICoroutineRunner _coroutineRunner;
+        [Inject] private IPlatformService _platformService;
+        [Inject] private IButtonsLockService _buttonsLockService;
+        [Inject] private IAnimationDurationConfig _animationDurationConfig;
 
         private readonly Queue<JumpData> _numberOfPlatforms = new();
         public void Enter()
@@ -31,22 +34,24 @@ namespace GameModels.StateMachine
 
         private void OnMoveEnd()
         {
+            Debug.LogError(_numberOfPlatforms.Count);
             if (_numberOfPlatforms.Count > 0)
             {
                 var jumpData = _numberOfPlatforms.Dequeue();
+                
+                if (_numberOfPlatforms.Count == 0)
+                    _buttonsLockService.UnlockAllButtons();
+                
                 _coroutineRunner.StartAfterDelay(0.5f, () =>
                 {
                     
                     if (_platformService.TryGetPlatformContainer(jumpData.Index, out var platformContainer))
-                    {
                         platformContainer.OnMoveEnd();
-                    }
-                    
+            
                     _coroutineRunner.StartAfterDelay(0.3f, () =>
                     {
                         platformContainer.PlayDisable();
                         switch (jumpData.BonusType)         
-                            // switch ("X2")
                         {
                             case "PLUS1":
                                 _popupService.ShowPopup(PopupType.ExtraJumpBonusPopup);
@@ -57,18 +62,19 @@ namespace GameModels.StateMachine
                             case null:
                                 break;
                         }
+                        
+                        if (_numberOfPlatforms.Count > 0)
+                        {
+                            _coroutineRunner.StartAfterDelay(0.5f, () =>
+                            {
+                                var jumpData = _numberOfPlatforms.Peek();
+                                Jump(jumpData);
+                            });
+                        }
                     });
                 });
             }
-            
-            if (_numberOfPlatforms.Count > 0)
-            {
-                _coroutineRunner.StartAfterDelay(0.5f, () =>
-                {
-                    var jumpData = _numberOfPlatforms.Peek();
-                     OnJumped(jumpData.Index, jumpData.BonusType);
-                });
-            }
+
         }
 
         private void OnJumped(int index, string bonusType)
@@ -76,16 +82,23 @@ namespace GameModels.StateMachine
             var jumpData = new JumpData(index, bonusType);
             
             _numberOfPlatforms.Enqueue(jumpData);
-            if (_numberOfPlatforms.Peek() != jumpData)
+            
+            if (_numberOfPlatforms.Peek().Index != jumpData.Index)
                 return;
             
+            Jump(jumpData);
+        }
+
+        private void Jump(JumpData jumpData)
+        {
+            _buttonsLockService.LockAllButtons();
             _platformService.TryAddPlatformObjectByData(jumpData.Index + 3);
             _characterMover.SetNumberPlatform(jumpData.Index, _animationDurationConfig.DefaultJumpAnimationTime);
 
             if (_platformService.TryGetPlatformContainer(jumpData.Index, out var platformContainer))
             {
                 switch (jumpData.BonusType)
-                // switch ("X2")
+                    // switch ("X2")
                 {
                     case "PLUS1":
                         platformContainer.SetBonus(BonusType.ExtraJump);

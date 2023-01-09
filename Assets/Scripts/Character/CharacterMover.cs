@@ -112,7 +112,6 @@ namespace Character
                 Debug.LogError($"PlatformContainer {_currentCharacterPlatformNumber} not found ");
                 GenerateUndignifiedPlatform();
                 _platformService.TryGetPlatformContainer(_currentCharacterPlatformNumber, out nextPlatformContainer);
-
             }
             
             _characterController.transform.position = nextPlatformContainer.CharacterRoot.position;
