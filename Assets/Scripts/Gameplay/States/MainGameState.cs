@@ -34,7 +34,6 @@ namespace GameModels.StateMachine
 
         private void OnMoveEnd()
         {
-            Debug.LogError(_numberOfPlatforms.Count);
             if (_numberOfPlatforms.Count > 0)
             {
                 var jumpData = _numberOfPlatforms.Dequeue();

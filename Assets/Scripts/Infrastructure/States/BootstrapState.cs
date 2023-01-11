@@ -26,7 +26,7 @@ namespace Infrastructure.States
             _accountModel.RefreshBalance(1000f, "USD");
             _jumperServerApi.AuthRequest(() =>
             {
-                // _jumperServerApi.InitializeSocketIO();
+                _jumperServerApi.InitializeSocketIO();
                 _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel);
             });
         }

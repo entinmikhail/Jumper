@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using System.Web;
 using BestHTTP.SocketIO3;
+using BestHTTP.SocketIO3.Transports;
 using GameModels;
 using UIControllers;
 using UnityEngine;
@@ -74,19 +75,24 @@ namespace Server
         {
             SocketOptions options = new SocketOptions();
             options.AutoConnect = false;
-            // var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/?Authorization={_authToken}&operatorId={_operatorId}"));
-            var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}&transport=websocket"));
-            var root = manager.Socket;
-            
+            options.ConnectWith = TransportTypes.WebSocket;
+
+            var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}"), options);
+            // var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}&transport=websocket"), options);
+            // var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}"), options);
+            manager.Open();
+
             // var onBalanceChange = manager.GetSocket("onBalanceChange");
             // var currencies = manager.GetSocket("currencies");
             // var betsRanges = manager.GetSocket("betsRanges");
-            manager.Open();
             // Debug.Log(manager.Handshake.Sid);
+            
             manager.Socket.On("onBalanceChange", () => Debug.Log(1));
             manager.Socket.On("currencies", () => Debug.Log(1));
             manager.Socket.On("betsRanges", () => Debug.Log(1));
             manager.Socket.On("connect", () => Debug.Log(1));
+            
+            Debug.LogError(manager.State);
         }
         
         private IEnumerator AuthRequestCoroutine(Action callback, Action badCallback)
