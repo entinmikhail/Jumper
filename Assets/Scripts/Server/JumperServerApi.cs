@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Web;
 using BestHTTP.SocketIO3;
 using BestHTTP.SocketIO3.Transports;
+using BestHTTP.PlatformSupport.IL2CPP;
 using GameModels;
 using UIControllers;
 using UnityEngine;
@@ -12,6 +14,27 @@ using Zenject;
 
 namespace Server
 {
+    
+    [Preserve]
+    public class BetsRangesData
+    {
+        [Preserve] public float MinBet;
+        [Preserve] public float MaxBet; 
+    }
+    
+    [Preserve] 
+    public class CurrenciesData
+    {
+        [Preserve] public Dictionary<string, object> CurrenciesDictionary = new ();
+    }
+    
+    [Preserve]
+    public class OnBalanceChangeData
+    {
+        [Preserve] public string currency;
+        [Preserve] public float balance;
+    }
+    
     public interface IJumperServerApi
     {
         event Action<GetStateResponse> StateGet;
@@ -51,8 +74,6 @@ namespace Server
         [Inject] private ICoroutineRunner _coroutineRunner;
         [Inject] private IGameHandler _gameHandler;
 
-
-
         public void Init(INotificationService notificationService)
         {
             _notificationService = notificationService;
@@ -77,24 +98,35 @@ namespace Server
             options.AutoConnect = false;
             options.ConnectWith = TransportTypes.WebSocket;
 
-            var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}"), options);
-            // var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}&transport=websocket"), options);
-            // var manager = new SocketManager(new Uri($"https://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}"), options);
-            manager.Open();
+            _authToken =
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWNjZXNzIjp0cnVlLCJ1c2VySWQiOiIyMTgxNDIiLCJuaWNrbmFtZSI6ImV4YTIjNjEwNCIsImJhbGFuY2UiOjk5OTk4OS4zNiwiY3VycmVuY3kiOiJJTlIiLCJvcGVyYXRvciI6IjNiZGRhNzE5LThiNDctNGUxOS05MjgyLTRlYTFkZjRiMWRhNSIsImlhdCI6MTY3MzUzMDQ3NiwiZXhwIjoxNjczNjE2ODc2fQ.rpOedJhFfN7aEupG6R_rNHgytdGRpXJ2KaUzNlLW1lA"; 
+            
+            var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/io/?Authorization=${_authToken}&operatorId=${_operatorId}"), options);
+            
+            manager.Socket.On("connect", () => Debug.Log("connected"));
+            manager.Socket.On<OnBalanceChangeData>("onBalanceChange", OnBalanceChanged);
 
-            // var onBalanceChange = manager.GetSocket("onBalanceChange");
-            // var currencies = manager.GetSocket("currencies");
-            // var betsRanges = manager.GetSocket("betsRanges");
-            // Debug.Log(manager.Handshake.Sid);
+            manager.Socket.On<BetsRangesData>("betsRanges", OnBetsRanges);
+            manager.Socket.On<Dictionary<string, object>>("currencies", OnCurrencies);
             
-            manager.Socket.On("onBalanceChange", () => Debug.Log(1));
-            manager.Socket.On("currencies", () => Debug.Log(1));
-            manager.Socket.On("betsRanges", () => Debug.Log(1));
-            manager.Socket.On("connect", () => Debug.Log(1));
-            
-            Debug.LogError(manager.State);
+            manager.Open();
         }
-        
+
+        private void OnBetsRanges(BetsRangesData data)
+        {
+            Debug.LogError("OnBetsRanges");
+        }
+
+        private void OnCurrencies(Dictionary<string, object> data)
+        {
+            Debug.LogError("OnCurrencies");
+        }
+
+        private void OnBalanceChanged(OnBalanceChangeData data)
+        {
+            Debug.LogError("OnBalanceChanged");
+        }
+
         private IEnumerator AuthRequestCoroutine(Action callback, Action badCallback)
         {
             RequestSentEvent?.Invoke();
@@ -107,7 +139,7 @@ namespace Server
 #endif
             
 #if UNITY_EDITOR
-            appUrl = new Uri("http://localhost/UnityBuilds/Jumper?operatorId=3bdda719-8b47-4e19-9282-4ea1df4b1da5&authToken=be67dc74323f3f1142f6152aa3ff0d32&currency=USD");
+            appUrl = new Uri("http://localhost/UnityBuilds/Jumper?operatorId=3bdda719-8b47-4e19-9282-4ea1df4b1da5&authToken=be67dc74323f3f1142f6152aa3ff0d32&currency=INR");
 #endif
 
 

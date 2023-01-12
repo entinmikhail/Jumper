@@ -8,7 +8,7 @@ namespace GameModels
         float CurrentBalance { get; set; }
         string CurrentCurrency { get; set; }
         event Action<float, string> BalanceChanged;
-        void RefreshBalance(float newBalance, string currency);
+        void RefreshBalance(float newBalance, string currency = null);
         void ChangeBalance(float delta);
     }
 
@@ -18,9 +18,11 @@ namespace GameModels
         public string CurrentCurrency { get; set; }
         public event Action<float, string> BalanceChanged;
 
-        public void RefreshBalance(float newBalance, string currency)
+        public void RefreshBalance(float newBalance, string currency = null)
         {
-            CurrentCurrency = currency;
+            if (currency != null)
+                CurrentCurrency = currency;
+
             CurrentBalance = newBalance;
             BalanceChanged?.Invoke(CurrentBalance, CurrentCurrency);
         }

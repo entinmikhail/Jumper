@@ -29,12 +29,8 @@ namespace Platforms
         {
 
             if (_platformContainersByNumber.TryGetValue(currentNumber, out var platformContainer))
-            {
-                Debug.LogError("Platform exist");
                 return false;
-            }
-                    
-   
+
             return _platformContainersByNumber.TryAdd(currentNumber, _platformCreator.CreatePlatform(currentNumber));
         }
 

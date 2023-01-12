@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Configs;
@@ -20,6 +21,9 @@ namespace GameModels
         void CashOutHandle(CashoutResponse cashoutResponse);
         void BetHandle(BetResponse response);
         void BonusBetHandle(BonusBetResponse response);
+        void OnBetsRanges(BetsRangesData data);
+        void OnCurrencies(Dictionary<string, object> data);
+        void OnBalanceChanged(OnBalanceChangeData data);
     }
 
     public class GameHandler : IGameHandler
@@ -28,8 +32,9 @@ namespace GameModels
         
         [Inject] private IGameStorage _gameStorage;
         [Inject] private IGameConfigs _gameConfigs;
+        [Inject] private IAccountModel _accountModel;
         [Inject] private IGameModel _gameModel;
-        
+
         public void BonusBetHandle(BonusBetResponse response)
         {
             if (_gameModel.GameState == GameState.PrepareGameState)
@@ -38,6 +43,22 @@ namespace GameModels
             _gameStorage.RefreshData(response);
 
             Jumped?.Invoke(_gameStorage.CurrentAltitude, null);
+        }
+
+        public void OnBetsRanges(BetsRangesData data)
+        {
+            _gameConfigs.MaxBet = data.MaxBet;
+            _gameConfigs.MinBet = data.MinBet;
+        }
+
+        public void OnCurrencies(Dictionary<string, object> data)
+        {
+            _gameConfigs.SetCurrencyFactor(data);
+        }
+
+        public void OnBalanceChanged(OnBalanceChangeData data)
+        {
+            _accountModel.RefreshBalance(data.balance, data.currency);
         }
         
         public void InitializeHandle(GetStateResponse initialStateResponse)
