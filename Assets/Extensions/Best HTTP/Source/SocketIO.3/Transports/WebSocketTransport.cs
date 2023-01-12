@@ -37,11 +37,12 @@ namespace BestHTTP.SocketIO3.Transports
                 return;
 
             Uri uri = null;
-            string baseUrl = new UriBuilder(HTTPProtocolFactory.IsSecureProtocol(Manager.Uri) ? "wss" : "ws",
+            string baseUrls = new UriBuilder(HTTPProtocolFactory.IsSecureProtocol(Manager.Uri) ? "wss" : "ws",
                                                             Manager.Uri.Host,
                                                             Manager.Uri.Port,
                                                             Manager.Uri.GetRequestPathAndQueryURL()).Uri.ToString();
-            string format = "{0}?EIO={1}&transport=websocket{3}";
+            var baseUrl = baseUrls.Replace("%3F", "?");
+            string format = "{0}&EIO={1}&transport=websocket{3}";
             if (Manager.Handshake != null)
                 format += "&sid={2}";
 

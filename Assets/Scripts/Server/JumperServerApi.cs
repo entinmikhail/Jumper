@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Web;
 using BestHTTP.SocketIO3;
@@ -18,15 +19,16 @@ namespace Server
     [Preserve]
     public class BetsRangesData
     {
-        [Preserve] public float MinBet;
-        [Preserve] public float MaxBet; 
+        [Preserve] public double MinBet;
+        [Preserve] public double MaxBet;
+
+        public BetsRangesData(double minBet, double maxBet)
+        {
+            MinBet = minBet;
+            MaxBet = maxBet;
+        }
     }
     
-    [Preserve] 
-    public class CurrenciesData
-    {
-        [Preserve] public Dictionary<string, object> CurrenciesDictionary = new ();
-    }
     
     [Preserve]
     public class OnBalanceChangeData
@@ -98,32 +100,32 @@ namespace Server
             options.AutoConnect = false;
             options.ConnectWith = TransportTypes.WebSocket;
 
-            _authToken =
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWNjZXNzIjp0cnVlLCJ1c2VySWQiOiIyMTgxNDIiLCJuaWNrbmFtZSI6ImV4YTIjNjEwNCIsImJhbGFuY2UiOjk5OTk4OS4zNiwiY3VycmVuY3kiOiJJTlIiLCJvcGVyYXRvciI6IjNiZGRhNzE5LThiNDctNGUxOS05MjgyLTRlYTFkZjRiMWRhNSIsImlhdCI6MTY3MzUzMDQ3NiwiZXhwIjoxNjczNjE2ODc2fQ.rpOedJhFfN7aEupG6R_rNHgytdGRpXJ2KaUzNlLW1lA"; 
-            
-            var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/io/?Authorization=${_authToken}&operatorId=${_operatorId}"), options);
-            
+            var manager = new SocketManager(new Uri($"wss://api-dev.inout.games/io/?Authorization={_authToken}&operatorId={_operatorId}"), options);
             manager.Socket.On("connect", () => Debug.Log("connected"));
+            
             manager.Socket.On<OnBalanceChangeData>("onBalanceChange", OnBalanceChanged);
-
-            manager.Socket.On<BetsRangesData>("betsRanges", OnBetsRanges);
+            manager.Socket.On<Dictionary<string, object[]>>("betsRanges", OnBetsRanges);
             manager.Socket.On<Dictionary<string, object>>("currencies", OnCurrencies);
             
             manager.Open();
         }
 
-        private void OnBetsRanges(BetsRangesData data)
+        private void OnBetsRanges(Dictionary<string, object[]> data)
         {
+            var values = data.First().Value;
+            _gameHandler.OnBetsRanges(new BetsRangesData((double)values[0], (double)values[1]));
             Debug.LogError("OnBetsRanges");
         }
 
         private void OnCurrencies(Dictionary<string, object> data)
         {
+            _gameHandler.OnCurrencies(data);
             Debug.LogError("OnCurrencies");
         }
 
         private void OnBalanceChanged(OnBalanceChangeData data)
         {
+            _gameHandler.OnBalanceChanged(data);
             Debug.LogError("OnBalanceChanged");
         }
 

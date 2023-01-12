@@ -47,8 +47,8 @@ namespace GameModels
 
         public void OnBetsRanges(BetsRangesData data)
         {
-            _gameConfigs.MaxBet = data.MaxBet;
-            _gameConfigs.MinBet = data.MinBet;
+            _gameConfigs.MaxBet = (float)data.MaxBet;
+            _gameConfigs.MinBet = (float)data.MinBet;
         }
 
         public void OnCurrencies(Dictionary<string, object> data)
